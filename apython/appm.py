@@ -51,6 +51,64 @@ class AppiumDevice:
             "waitForIdleTimeout": 3000,  # 3 seconds
         })
 
+    def appium_youtube_music(self, play_time):
+        self.driver.activate_app('com.google.android.apps.youtube.music')
+        sleep(3)
+        try:
+            print("Click on search icon")
+            # self.driver.find_element_by_xpath(".//android.widget.ImageView[@content-desc='Search']").click()
+            self.driver.find_element_by_id('com.google.android.apps.youtube.music:id/action_search_button').click()
+            sleep(3)
+            search_text = 'two hours soulful medidation'
+            # edit = self.driver.find_element_by_id('com.google.android.apps.youtube.music:id/search_edit_text')
+            edit = self.driver.find_element_by_xpath(".//android.widget.EditText").send_keys(search_text)
+            if edit:
+                print('find edit')
+            edit.send_keys(search_text)
+
+            self.enter()
+            sleep(3)
+            print("Scrolling Up and Down")
+            self.appium_touch_move_up()
+            sleep(1)
+            self.appium_touch_move_up()
+            sleep(1)
+            self.appium_touch_move_down()
+            sleep(1)
+            print("Click on Video to Play")
+            self.driver.find_element_by_xpath(".//android.view.ViewGroup[@index='0']").click()
+            try:
+                self.driver.find_element_by_id("com.google.android.youtube:id/skip_ad_button_container").click()
+            except Exception as e:
+                print("No ad")
+            finally:
+                print('Start music')
+
+            sleep(play_time)
+            sleep(3)
+            print("Closing the Video")
+            print("Exit: Youtube Music")
+            print("____________________________________________________________________\n")
+            self.back(10)
+        except Exception as e:
+            print('Music errors: ' + str(e))
+        finally:
+            print('Done music')
+            self.home()
+
+    def home(self, times=1):
+        for i in range(times):
+            self.driver.keyevent(3)
+            sleep(0.1)
+
+    def back(self, times=1):
+        for i in range(times):
+            self.driver.keyevent(4)
+            sleep(0.1)
+
+    def enter(self):
+        self.driver.keyevent(66)
+
     def save_screen(self, name):
         """
         Save screen with id, timestamp
@@ -68,6 +126,8 @@ class AppiumDevice:
         except Exception as e:
             print(e)
             print("Unable to Scroll up to down")
+        finally:
+            print('move down failed')
 
     def verify_signal_loss_message(self):
         """
@@ -125,6 +185,8 @@ class AppiumDevice:
         except Exception as e:
             print(e)
             print("Unable to Scroll down to up")
+        finally:
+            print('Move up failed')
 
     def appium_set_volume_percentages(self, pct_list):
         """
@@ -150,5 +212,7 @@ class AppiumDevice:
             except Exception as e:
                 print(e)
                 print("Unable to move the bar")
+            finally:
+                print('Bar moving failed')
 
 

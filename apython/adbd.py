@@ -1,4 +1,5 @@
 import os
+import time
 from time import sleep
 
 
@@ -16,9 +17,21 @@ class AdbDevice:
             os.system("adb -s " + self.adb_id + "  shell am start -a " + app_name)
         except Exception as e:
             print('Start app failed {}'.format(e))
+        finally:
+            print('Failed start app {}'.format(app_name))
 
     def start_app_settings(self):
         self.start_app('android.settings.SETTINGS')
+
+    def dump_top_cpu(self, file_path):
+        """
+        Dump memory, cpu to files
+        :param file_path:
+        :return:
+        """
+        time_str = time.strftime("%Y%m%d-%H%M%S")
+        os.system('adb -s {0} shell top -n 1 > {1}_{0}_{2}_top.log'.format(self.adb_id, file_path, time_str))
+        os.system('adb -s {0} shell dumpsys cpuinfo > {1}_{0}_{2}_cpu.log'.format(self.adb_id, file_path, time_str))
 
     def key_five(self, key_code):
         """
@@ -128,9 +141,3 @@ class AdbDevice:
 
     def key_back(self):
         self.key_five(4)
-
-
-# adb_d = AdbDevice('989AY13LAL')
-adb_d = AdbDevice('573052324e573398')
-adb_d.key_five(4)
-adb_d.start_app_settings()
