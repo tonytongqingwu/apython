@@ -36,7 +36,7 @@ class UADevice:
 
 # d = UADevice('192.168.1.97:5503')
 d = UADevice('573052324e573398')
-d.dump_screen('volume')
+d.dump_screen('signal_lost_alert')
 # d.select_text('Sounds and vibration')
 # d.scroll_to_select('Sounds and vibration')
 # d.drag(165, 301, 1036, 433, 10)   # Media

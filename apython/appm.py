@@ -4,11 +4,11 @@ import subprocess
 import datetime
 import base64
 import re
+import time
 from time import sleep
 from appium import webdriver
 from datetime import datetime
 from appium.webdriver.common.touch_action import TouchAction
-from apython.adbd import AdbDevice
 
 
 def get_bar_move_by_pct(bounds, pct):
@@ -51,6 +51,15 @@ class AppiumDevice:
             "waitForIdleTimeout": 3000,  # 3 seconds
         })
 
+    def save_screen(self, name):
+        """
+        Save screen with id, timestamp
+        :param name: full path name, ex. /Users/tt0622/screen_test
+        :return: /Users/tt0622/screen_test_xxx_2022-021359.png
+        """
+        f_name = '{}_{}_{}.png'.format(name, self.adb_id, time.strftime("%Y%m%d-%H%M%S"))
+        self.driver.save_screenshot(f_name)
+
     def appium_touch_move_down(self):
         try:
             touch = TouchAction(self.driver)
@@ -59,6 +68,46 @@ class AppiumDevice:
         except Exception as e:
             print(e)
             print("Unable to Scroll up to down")
+
+    def verify_signal_loss_message(self):
+        """
+        Verify signal loss after 10 minutes with message
+        :return:
+        """
+        try:
+            lost_help = self.driver.find_element_by_id('com.dexcom.g7:id/id_glucose_state_card_help_button')
+        except Exception as e:
+            print('Get lost_help button failed ' + e)
+
+        try:
+            lost_title = self.driver.find_element_by_id('com.dexcom.g7:id/id_glucose_state_card_title_label')
+        except Exception as e:
+            print('Get lost_title  failed ' + e)
+
+        if lost_help and lost_title and lost_title.text == 'Signal Loss':
+            return True
+        else:
+            return False
+
+    def verify_signal_loss_alert(self):
+        """
+        Verify signal loss after 20 minutes with message
+        :return:
+        """
+        try:
+            lost_ok = self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_acknowledge_button')
+        except Exception as e:
+            print('Get lost_ok button failed ' + e)
+
+        try:
+            lost_title = self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_title_label')
+        except Exception as e:
+            print('Get lost_title  failed ' + e)
+
+        if lost_ok and lost_title and lost_title.text == 'Signal Loss':
+            return True
+        else:
+            return False
 
     def appium_tap_title_contains(self, text):
         titles = self.driver.find_elements_by_id('android:id/title')
@@ -83,8 +132,7 @@ class AppiumDevice:
         :param pct_list: list of percentages value of above
         :return: None
         """
-        # todo: not working:
-        # self.driver.start_activity('com.android.settings', 'QuickSettingsTile')
+        self.driver.activate_app('com.android.settings')
         self.appium_tap_title_contains('Sounds')
         self.appium_tap_title_contains('Volume')
         bars = self.driver.find_elements_by_id('android:id/seekbar')
@@ -100,12 +148,4 @@ class AppiumDevice:
                 print(e)
                 print("Unable to move the bar")
 
-
-appium_d = AppiumDevice('573052324e573398', '4723', 'G7')
-appium_d.driver.keyevent(3)
-adb_d = AdbDevice('573052324e573398')
-adb_d.start_app_settings()
-# appium_d.driver.save_screenshot('appium.png')
-appium_d.appium_set_volume_percentages([68, 58, 48, 38])
-# appium_d.stop()
 
