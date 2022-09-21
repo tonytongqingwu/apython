@@ -44,8 +44,8 @@ class AppiumDevice:
             "androidInstallTimeout": 180000,
             "disableWindowAnimation": True
         }
-        print(self.common_desired_cap)
-        print("appium server port number :", self.port_num)
+        # print(self.common_desired_cap)
+        # print("appium server port number :", self.port_num)
         self.driver = webdriver.Remote("http://localhost:" + self.port_num + "/wd/hub", self.common_desired_cap)
         self.driver.update_settings({
             "waitForIdleTimeout": 3000,  # 3 seconds
@@ -133,8 +133,11 @@ class AppiumDevice:
         :return: None
         """
         self.driver.activate_app('com.android.settings')
-        self.appium_tap_title_contains('Sounds')
-        self.appium_tap_title_contains('Volume')
+        self.appium_tap_title_contains('Sound')
+        if 'Pixel' in self.driver.capabilities['deviceModel']:
+            print('Pixel has no Volume menu')
+        else:  # samsung SX has Volume menu
+            self.appium_tap_title_contains('Volume')  # S9
         bars = self.driver.find_elements_by_id('android:id/seekbar')
         for i in range(4):
             bounds = bars[i].get_attribute('bounds')
