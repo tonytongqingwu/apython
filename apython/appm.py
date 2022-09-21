@@ -51,6 +51,45 @@ class AppiumDevice:
             "waitForIdleTimeout": 3000,  # 3 seconds
         })
 
+    def server_error_recovery(self):
+        print("Server Error Recovery .... .. .... ......")
+        os.system("adb -s " + self.adb_id + " uninstall io.appium.uiautomator2.server")
+        sleep(2)
+        os.system("adb -s " + self.adb_id + " uninstall io.appium.uiautomator2.server.test")
+        sleep(2)
+        os.system("adb -s " + self.adb_id + " uninstall io.appium.settings")
+        sleep(2)
+        self.driver = webdriver.Remote("http://localhost:" + self.port_num + "/wd/hub", self.common_desired_cap)
+
+    def browse_chrome(self):
+        # todo: not much memory/cpu usage,
+        print('browse {}'.format(self.adb_id))
+
+    def launch_blue_g7(self):
+        print("-------------------------------------")
+        print("Launch G7")
+        print("-------------------------------------")
+        try:
+            # os.system("adb -s " + self.adb_id + " shell am start -n com.dexcom.g7/com.dexcom.phoenix.ui.SplashActivity")
+            self.driver.activate_app('com.dexcom.g7')
+            sleep(8)
+            self.home()
+            print("Press Device Home Button")
+            print("Exit: BLE_G7")
+            print("____________________________________________________________________\n")
+        except Exception as e:
+            print(str(e))
+            print(type(e))
+            self.back(5)
+            if "A session is either terminated or not started" in str(e):
+                self.server_error_recovery()
+            if "An unknown server-side error" in str(e):
+                self.driver.quit()
+                sleep(2)
+                self.server_error_recovery()
+        finally:
+            print('keep going from failed g7')
+
     def appium_youtube_music(self, play_time):
         self.driver.activate_app('com.google.android.apps.youtube.music')
         sleep(3)
@@ -60,10 +99,8 @@ class AppiumDevice:
             self.driver.find_element_by_id('com.google.android.apps.youtube.music:id/action_search_button').click()
             sleep(3)
             search_text = 'two hours soulful medidation'
-            # edit = self.driver.find_element_by_id('com.google.android.apps.youtube.music:id/search_edit_text')
-            edit = self.driver.find_element_by_xpath(".//android.widget.EditText").send_keys(search_text)
-            if edit:
-                print('find edit')
+            edit = self.driver.find_element_by_id('com.google.android.apps.youtube.music:id/search_edit_text')
+            # edit = self.driver.find_element_by_xpath(".//android.widget.EditText").send_keys(search_text)
             edit.send_keys(search_text)
 
             self.enter()
