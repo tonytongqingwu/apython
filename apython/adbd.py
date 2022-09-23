@@ -7,6 +7,10 @@ class AdbDevice:
     def __init__(self, adb_id):
         self.adb_id = adb_id
 
+    def open_url_in_chrome(self, url):
+        os.system("adb -s " + self.adb_id +
+                  " shell am start -n com.android.chrome/com.google.android.apps.chrome.Main -d " + url)
+
     def start_app(self, app_name):
         """
 
@@ -31,7 +35,7 @@ class AdbDevice:
         """
         time_str = time.strftime("%Y%m%d-%H%M%S")
         os.system('adb -s {0} shell top -n 1 > {1}_{0}_{2}_top.log'.format(self.adb_id, file_path, time_str))
-        os.system('adb -s {0} shell dumpsys cpuinfo > {1}_{0}_{2}_cpu.log'.format(self.adb_id, file_path, time_str))
+        os.system('adb -s {0} shell dumpsys cpuinfo | head -10 > {1}_{0}_{2}_cpu.log'.format(self.adb_id, file_path, time_str))
 
     def key_five(self, key_code):
         """

@@ -1,12 +1,8 @@
 import sys
+from time import sleep
 from apython.appm import AppiumDevice
 from apython.adbd import AdbDevice
-
-
-def music(appium_d):
-    appium_d.appium_youtube_music(10)
-    # appium_d.save_screen('/Users/tt0622/music')
-    # adb_d.dump_top_cpu('/Users/tt0622/music')
+from apython.apps.apps import AppiumApps
 
 
 def check_signal_loss(appium_d):
@@ -36,18 +32,42 @@ def check_signal_loss(appium_d):
     return has_loss
 
 
+def record_top(file_name, value):
+    with open(file_name, 'w') as f:
+        f.writelines(str(value))
+
+
 if __name__ == '__main__':
+    """
+    adb id and file path like '/Users/tt0622/Test/' is the folder, and 'Map' is prefix.
+    python stress.py 989AY13LAL '/Users/tt0622/Test/Map'
+    """
     id_adb = sys.argv[1]
     file_path = sys.argv[2]
     print(id_adb)
-    app_d = AppiumDevice(id_adb, '4723', 'G7')
+    app_d = AppiumApps(id_adb)
+    min_mem_free = 4000
+    max_cpu_used = 0
+
     print(app_d.driver.capabilities['deviceModel'])
-    adb_d = AdbDevice(id_adb)
+    top_mem = file_path + '_free_mem.log'
+    top_cpu = file_path + '_used_cpu.log'
+
     while True:
-        music(app_d)
-        app_d.launch_blue_g7()
+        app_d.run_apps()
+        m, c = app_d.get_top_info()
+        if m < min_mem_free:
+            min_mem_free = m
+            record_top(top_mem, min_mem_free)
+
+        if c > max_cpu_used:
+            max_cpu_used = c
+            record_top(top_cpu, max_cpu_used)
+
         if check_signal_loss(app_d):
+            print("\033[91mSignal lost !!!\033[0m")
             app_d.save_screen(file_path)
-            adb_d.dump_top_cpu(file_path)
+
+
 
 

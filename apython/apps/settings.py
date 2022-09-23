@@ -2,31 +2,32 @@ from time import sleep
 from apython.appm import AppiumDevice
 
 
-class Map(AppiumDevice):
+class Settings(AppiumDevice):
     def __init__(self):
         super().__init__()
         pass
 
-    def navigate(self):
-        print('Run Google Map')
-        self.driver.start_activity('com.google.android.apps.maps', 'com.google.android.maps.MapsActivity')
-        sleep(4)
+    def open_settings(self):
+        print("-------------------------------------")
+        print("Open Settings on Mobile Device")
+        print("-------------------------------------")
+        sleep(2)
         try:
-            # Click on 1st tab
-            print("Click on First Tab")
-            self.driver.find_element_by_xpath("//android.widget.Button[@index='0']").click()
-            sleep(2)
+            print("Open Settings")
+            self.driver.start_activity('com.android.settings')
+            sleep(4)
             print("Navigating Up and Down")
             self.appium_touch_move_up()
+            sleep(2)
             self.appium_touch_move_up()
             sleep(2)
             self.appium_touch_move_down()
-            self.appium_touch_move_down()
-            print("Press Device BackButton")
-            self.back(3)
-            print("Exit: GoogleMaps")
+            sleep(1)
+            print("Scroll Up and Down")
+            print("Press Device Home Button")
+            self.home()
+            print("Exit: openSettings_on_Mobile")
             print("____________________________________________________________________\n")
-            self.back(5)
         except Exception as e:
             print(str(e))
             print(type(e))
@@ -38,8 +39,4 @@ class Map(AppiumDevice):
                 sleep(2)
                 self.server_error_recovery()
         finally:
-            print('Done map')
-            self.back(5)
-            self.home()
-
-
+            print('Done Settings')

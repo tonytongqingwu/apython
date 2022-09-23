@@ -28,7 +28,7 @@ class AppiumDevice:
         self.driver.stop_client()
         # self.driver.close()
 
-    def __init__(self, adb_id, port_num, dexcom_app_type):
+    def __init__(self, adb_id, port_num='4723', dexcom_app_type='G7'):
         self.adb_id = adb_id
         self.port_num = port_num
         self.dexcom_app_type = dexcom_app_type
@@ -51,6 +51,34 @@ class AppiumDevice:
             "waitForIdleTimeout": 3000,  # 3 seconds
         })
 
+    def get_top_info(self):
+        mem_free = cpu_total = cpu_idle = cpu_used = 0
+        mem_unit = 'M'
+        result = self.driver.execute_script('mobile: shell', {
+            'command': 'top',
+            'args': ['-n', '1', '|', 'head', '-4'],
+            'includeStderr': True,
+            'timeout': 5000
+        })
+
+        out = re.sub(r'\W+', '', result['stdout'])
+        print(out)
+        # used60Mfree51MbuffersSwap20Gtotal14Gused517Mfree920Mcached800cpu117user0nice60sys607idle0iow13irq3sirq0host
+        m = re.search('used(\d+)(\w)free.+\d+\wfree.+cached(\d+)cpu.+sys(\d+)idle', out)
+        if m:
+            mem_free = int(m.group(1))
+            mem_unit = m.group(2)
+            cpu_total = int(m.group(3))
+            cpu_idle = int(m.group(4))
+
+            print(cpu_idle, cpu_total)
+            cpu_used = int(cpu_total) - int(cpu_idle)
+
+            if mem_unit == 'G':
+                mem_free *= 1000
+
+        return mem_free, cpu_used
+
     def server_error_recovery(self):
         print("Server Error Recovery .... .. .... ......")
         os.system("adb -s " + self.adb_id + " uninstall io.appium.uiautomator2.server")
@@ -60,78 +88,6 @@ class AppiumDevice:
         os.system("adb -s " + self.adb_id + " uninstall io.appium.settings")
         sleep(2)
         self.driver = webdriver.Remote("http://localhost:" + self.port_num + "/wd/hub", self.common_desired_cap)
-
-    def browse_chrome(self):
-        # todo: not much memory/cpu usage,
-        print('browse {}'.format(self.adb_id))
-
-    def launch_blue_g7(self):
-        print("-------------------------------------")
-        print("Launch G7")
-        print("-------------------------------------")
-        try:
-            # os.system("adb -s " + self.adb_id + " shell am start -n com.dexcom.g7/com.dexcom.phoenix.ui.SplashActivity")
-            self.driver.activate_app('com.dexcom.g7')
-            sleep(8)
-            self.home()
-            print("Press Device Home Button")
-            print("Exit: BLE_G7")
-            print("____________________________________________________________________\n")
-        except Exception as e:
-            print(str(e))
-            print(type(e))
-            self.back(5)
-            if "A session is either terminated or not started" in str(e):
-                self.server_error_recovery()
-            if "An unknown server-side error" in str(e):
-                self.driver.quit()
-                sleep(2)
-                self.server_error_recovery()
-        finally:
-            print('keep going from failed g7')
-
-    def appium_youtube_music(self, play_time):
-        self.driver.activate_app('com.google.android.apps.youtube.music')
-        sleep(3)
-        try:
-            print("Click on search icon")
-            # self.driver.find_element_by_xpath(".//android.widget.ImageView[@content-desc='Search']").click()
-            self.driver.find_element_by_id('com.google.android.apps.youtube.music:id/action_search_button').click()
-            sleep(3)
-            search_text = 'two hours soulful medidation'
-            edit = self.driver.find_element_by_id('com.google.android.apps.youtube.music:id/search_edit_text')
-            # edit = self.driver.find_element_by_xpath(".//android.widget.EditText").send_keys(search_text)
-            edit.send_keys(search_text)
-
-            self.enter()
-            sleep(3)
-            print("Scrolling Up and Down")
-            self.appium_touch_move_up()
-            sleep(1)
-            self.appium_touch_move_up()
-            sleep(1)
-            self.appium_touch_move_down()
-            sleep(1)
-            print("Click on Video to Play")
-            self.driver.find_element_by_xpath(".//android.view.ViewGroup[@index='0']").click()
-            try:
-                self.driver.find_element_by_id("com.google.android.youtube:id/skip_ad_button_container").click()
-            except Exception as e:
-                print("No ad")
-            finally:
-                print('Start music')
-
-            sleep(play_time)
-            sleep(3)
-            print("Closing the Video")
-            print("Exit: Youtube Music")
-            print("____________________________________________________________________\n")
-            self.back(10)
-        except Exception as e:
-            print('Music errors: ' + str(e))
-        finally:
-            print('Done music')
-            self.home()
 
     def home(self, times=1):
         for i in range(times):
