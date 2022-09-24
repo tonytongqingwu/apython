@@ -15,21 +15,16 @@ class MemoryFill(AppiumDevice):
         sleep(4)
         try:
             print("Click on ++100MB Button")
-            for i in range(0, 8):
+            for i in range(8):
                 self.driver.find_element_by_id("com.rektgames.memoryfill:id/more").click()
                 sleep(0.1)
-                i += 1
             sleep(10)
 
             print("Click on Fill Button")
-            for i in range(0, 8):
+            for i in range(8):
                 self.driver.find_element_by_id("com.rektgames.memoryfill:id/allocate").click()
                 sleep(0.1)
-                i += 1
             sleep(10)
-
-            print("Press Device BackButton")
-            self.Press_Device_BackButton()
             print("Exit: MemoryFill_App")
             print("____________________________________________________________________\n")
             self.back(5)

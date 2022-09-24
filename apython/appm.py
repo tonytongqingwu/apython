@@ -89,6 +89,10 @@ class AppiumDevice:
         sleep(2)
         self.driver = webdriver.Remote("http://localhost:" + self.port_num + "/wd/hub", self.common_desired_cap)
 
+    def adb_open_url(self, url):
+        os.system("adb -s " + self.adb_id +
+                  " shell am start -n com.android.chrome/com.google.android.apps.chrome.Main -d " + url)
+
     def home(self, times=1):
         for i in range(times):
             self.driver.keyevent(3)
@@ -207,5 +211,3 @@ class AppiumDevice:
                 print("Unable to move the bar")
             finally:
                 print('Bar moving failed')
-
-

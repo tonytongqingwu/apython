@@ -1,8 +1,6 @@
 import sys
-from time import sleep
-from apython.appm import AppiumDevice
-from apython.adbd import AdbDevice
-from apython.apps.apps import AppiumApps
+import random
+from apython.apps.apps import *
 
 
 def check_signal_loss(appium_d):
@@ -54,7 +52,17 @@ if __name__ == '__main__':
     top_cpu = file_path + '_used_cpu.log'
 
     while True:
-        app_d.run_apps()
+        # can create own sequence of apps
+        for app in APPS:
+            app_d.run_app(app)
+
+        print('Run app randomly')
+        app = random.choice(APPS)
+
+        app_d.run_app(MUSIC)
+        app_d.run_app(G7)
+
+        app_d.run_app(app)
         m, c = app_d.get_top_info()
         if m < min_mem_free:
             min_mem_free = m
@@ -67,7 +75,3 @@ if __name__ == '__main__':
         if check_signal_loss(app_d):
             print("\033[91mSignal lost !!!\033[0m")
             app_d.save_screen(file_path)
-
-
-
-

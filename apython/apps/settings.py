@@ -14,7 +14,7 @@ class Settings(AppiumDevice):
         sleep(2)
         try:
             print("Open Settings")
-            self.driver.start_activity('com.android.settings')
+            self.driver.start_activity('com.android.settings', 'com.android.settings.homepage.SettingsHomepageActivity')
             sleep(4)
             print("Navigating Up and Down")
             self.appium_touch_move_up()
