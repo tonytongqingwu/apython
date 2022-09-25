@@ -64,6 +64,7 @@ class AppiumDevice:
         out = re.sub(r'\W+', '', result['stdout'])
         print(out)
         # used60Mfree51MbuffersSwap20Gtotal14Gused517Mfree920Mcached800cpu117user0nice60sys607idle0iow13irq3sirq0host
+        # used1885132Kfree6438912buffersSwap2621436Ktotal1942704Kused678732Kfree960304Kcached800cpu100user0nice107sys579idle0iow10irq3sirq0host
         m = re.search('used(\d+)(\w)free.+\d+\wfree.+cached(\d+)cpu.+sys(\d+)idle', out)
         if m:
             mem_free = int(m.group(1))
@@ -71,11 +72,16 @@ class AppiumDevice:
             cpu_total = int(m.group(3))
             cpu_idle = int(m.group(4))
 
-            print(cpu_idle, cpu_total)
+            print(cpu_idle)
+            print(cpu_total)
+            print(mem_free)
+            print(mem_unit)
             cpu_used = int(cpu_total) - int(cpu_idle)
 
             if mem_unit == 'G':
                 mem_free *= 1000
+            elif mem_unit == 'K':
+                mem_free = int(mem_free / 1000)
 
         return mem_free, cpu_used
 
