@@ -14,3 +14,14 @@ adbd, uiauto, appm.
 
 `sudo python setup.py install`
 
+## How to run
+
+1. Start appium:
+
+`appium --relaxed-security `
+
+2. Check examples folder, create own test, or just run:
+
+`python3 examples/stress.py R58R50YXKEP  '/Users/tt0622/a52/all'`
+
+With serial number , and log path
