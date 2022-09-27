@@ -13,14 +13,18 @@ class Camera(AppiumDevice):
         sleep(2)
         try:
             print("Open Camera capture photo")
-            # self.driver.activate_app('com.google.android.GoogleCamera')  # pixel3a
-            # self.driver.start_activity('com.google.android.GoogleCamera', 'com.android.camera.CameraLauncher')
-            self.driver.keyevent(27)
+            if 'Pixel' in self.driver.capabilities['deviceModel']:
+                # self.driver.activate_app('com.google.android.GoogleCamera')  # pixel3a
+                self.driver.start_activity('com.google.android.GoogleCamera', 'com.android.camera.CameraLauncher')
+            else:
+                self.driver.keyevent(27)
             sleep(4)
 
             for i in range(16):
-                self.driver.keyevent(27)
-                # self.driver.find_element_by_id('com.google.android.GoogleCamera:id/shutter_button').click()
+                if 'Pixel' in self.driver.capabilities['deviceModel']:
+                    self.driver.find_element_by_id('com.google.android.GoogleCamera:id/shutter_button').click()
+                else:
+                    self.driver.keyevent(27)
                 sleep(0.5)
             self.home()
             print("Exit: Open_Camera")
