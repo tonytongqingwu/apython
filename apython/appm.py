@@ -58,6 +58,28 @@ class AppiumDevice:
             "waitForIdleTimeout": 3000,  # 3 seconds
         })
 
+    def set_adb_wifi(self, t_port):
+        result = self.driver.execute_script('mobile: shell', {
+            'command': 'ip',
+            'args': ['addr', 'show', 'wlan0', '|', 'grep', '"global', 'wlan"'],
+            'includeStderr': True,
+            'timeout': 5000
+        })
+
+        out = result['stdout']
+        print(out)
+        m = re.search('inet (\d+\.\d+\.\d+\.\d+)\/24 brd.+wlan', out)
+        if m:
+            wlan_ip = m.group(1)
+            print(wlan_ip)
+
+            os.system('adb -s ' + self.adb_id + ' tcpip ' + t_port)
+            os.system('adb -s {} connect {}:{}'.format(self.adb_id, wlan_ip, t_port))
+            os.system('adb devices')
+
+            print('Connecting to wifi now, you can disconnect cable anytime now')
+            return wlan_ip
+
     def get_top_info(self):
         mem_free = cpu_total = cpu_idle = cpu_used = 0
         mem_unit = 'M'
