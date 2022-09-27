@@ -26,8 +26,6 @@ class Settings(AppiumDevice):
             print("Scroll Up and Down")
             print("Press Device Home Button")
             self.home()
-            print("Exit: openSettings_on_Mobile")
-            print("____________________________________________________________________\n")
         except Exception as e:
             print(str(e))
             print(type(e))

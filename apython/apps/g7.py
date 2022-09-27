@@ -13,12 +13,9 @@ class G7(AppiumDevice):
         print("-------------------------------------")
         try:
             # os.system("adb -s " + self.adb_id + " shell am start -n com.dexcom.g7/com.dexcom.phoenix.ui.SplashActivity")
+            self.home()
             self.driver.activate_app('com.dexcom.g7')
             sleep(8)
-            self.home()
-            print("Press Device Home Button")
-            print("Exit: BLE_G7")
-            print("____________________________________________________________________\n")
         except Exception as e:
             print(str(e))
             print(type(e))
@@ -29,5 +26,3 @@ class G7(AppiumDevice):
                 self.driver.quit()
                 sleep(2)
                 self.server_error_recovery()
-        finally:
-            print('keep going from failed g7')

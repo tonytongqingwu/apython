@@ -15,7 +15,7 @@ MUSIC = 'Music'
 SETTINGS = 'Settings'
 MEMORY = 'Memory'
 
-APPS = [CAMERA, MAP, CHROME, G7_APP, MUSIC, MEMORY, SETTINGS, MEMORY]
+APPS = [CAMERA, MAP, CHROME, G7_APP, MEMORY, SETTINGS, MUSIC]
 
 
 class AppiumApps(AppiumDevice):
@@ -24,7 +24,7 @@ class AppiumApps(AppiumDevice):
 
     def run_app(self, app):
         if app == MUSIC:
-            Music.appium_youtube_music(self, 100)
+            Music.appium_youtube_music(self, 30)
         elif app == MAP:
             Map.navigate(self)
         elif app == G7_APP:

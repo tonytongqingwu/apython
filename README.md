@@ -14,6 +14,10 @@ adbd, uiauto, appm.
 
 `sudo python setup.py install`
 
+NOTE: if you don't want to check example code or create your own scripts, just run:
+
+`pip install git+https://github.com/tonytongqingwu/apython.git#egg=apython`
+
 ## How to run
 
 1. Start appium:
@@ -22,6 +26,10 @@ adbd, uiauto, appm.
 
 2. Check examples folder, create own test, or just run:
 
-`python3 examples/stress.py R58R50YXKEP  '/Users/tt0622/a52/all'`
+`python3 examples/stress.py R58R50YXKEP  
 
-With serial number , and log path
+With serial number 
+
+## Check logs:
+
+Home folder has a new folder like this - /module/adb_serial_num/timestamp 

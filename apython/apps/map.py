@@ -14,15 +14,14 @@ class Map(AppiumDevice):
         try:
             # Click on 1st tab
             print("Click on First Tab")
-            self.driver.find_element_by_xpath("//android.widget.Button[@index='0']").click()
-            sleep(2)
+            # self.driver.find_element_by_xpath("//android.widget.Button[@index='0']").click()
+            # sleep(2)
             print("Navigating Up and Down")
             self.appium_touch_move_up()
             self.appium_touch_move_up()
             sleep(2)
             self.appium_touch_move_down()
             self.appium_touch_move_down()
-            print("Press Device BackButton")
             self.back(3)
             print("Exit: GoogleMaps")
             print("____________________________________________________________________\n")

@@ -1,33 +1,8 @@
 import sys
 import random
+import time
+import os
 from apython.apps.apps import *
-
-
-def check_signal_loss(appium_d):
-    has_loss = False
-    try:
-        if appium_d.verify_signal_loss_alert():
-            print('Has alert')
-            has_loss = True
-        else:
-            print('No alert')
-    except Exception as e:
-        print(e)
-    finally:
-        print('find no alert')
-
-    try:
-        if appium_d.verify_signal_loss_message():
-            print('Has message')
-            has_loss = True
-        else:
-            print('No message')
-    except Exception as e:
-        print(e)
-    finally:
-        print('Find no message')
-
-    return has_loss
 
 
 def record_top(file_name, value):
@@ -35,34 +10,54 @@ def record_top(file_name, value):
         f.writelines(str(value))
 
 
+def record_apps(file_name, value):
+    with open(file_name, 'a') as f:
+        f.write(value + ',')
+
+
 if __name__ == '__main__':
     """
-    adb id and file path like '/Users/tt0622/Test/' is the folder, and 'Map' is prefix.
-    python stress.py 989AY13LAL '/Users/tt0622/Test/Map'
+    adb id must be provided
     """
     id_adb = sys.argv[1]
-    file_path = sys.argv[2]
     print(id_adb)
     app_d = AppiumApps(id_adb)
+
+    module = app_d.get_module()
+    log_path = os.getenv('HOME')
+    log_path = '{}/{}'.format(log_path, module)
+    os.system('mkdir {}'.format(log_path))
+    log_path = '{}/{}'.format(log_path, id_adb)
+    os.system('mkdir {}'.format(log_path))
+    log_path = '{}/{}'.format(log_path, time.strftime("%Y%m%d-%H%M%S"))
+    os.system('mkdir {}'.format(log_path))
+
     min_mem_free = 4000
     max_cpu_used = 0
 
     print(app_d.driver.capabilities['deviceModel'])
-    top_mem = file_path + '_free_mem.log'
-    top_cpu = file_path + '_used_cpu.log'
+    top_mem = log_path + '/free_mem.log'
+    top_cpu = log_path + '/used_cpu.log'
+    app_log = log_path + '/apps.log'
 
+    # app_d.run_app(CAMERA)
     while True:
+        app_d.run_app(MUSIC)  # always run music
+        record_apps(app_log, MUSIC)
+
         # can create own sequence of apps
         for app in APPS:
             app_d.run_app(app)
+            record_apps(app_log, app)
 
         print('Run app randomly')
         app = random.choice(APPS)
-
-        app_d.run_app(MUSIC)
-        app_d.run_app(G7)
-
         app_d.run_app(app)
+        record_apps(app_log, app)
+
+        app_d.run_app(MUSIC)  # always run music
+        record_apps(app_log, MUSIC)
+
         m, c = app_d.get_top_info()
         if m < min_mem_free:
             min_mem_free = m
@@ -72,6 +67,15 @@ if __name__ == '__main__':
             max_cpu_used = c
             record_top(top_cpu, max_cpu_used)
 
-        if check_signal_loss(app_d):
-            print("\033[91mSignal lost !!!\033[0m")
-            app_d.save_screen(file_path)
+        app_d.run_app(G7_APP)
+        record_apps(app_log, G7_APP)
+
+        if app_d.g7_verify_signal_loss_alert():
+            print("\033[91mSignal lost alert !!!\033[0m")
+            app_d.save_screen('{}/signal_loss_alert'.format(log_path))
+        elif app_d.g7_verify_signal_loss_message():
+            print("\033[91mSignal loss message !!!\033[0m")
+            app_d.save_screen('{}/signal_loss_message'.format(log_path))
+        else:
+            print('Click ack OK button')
+            app_d.g7_click_ok_alert_ack()

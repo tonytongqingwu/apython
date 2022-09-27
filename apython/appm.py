@@ -9,6 +9,7 @@ from time import sleep
 from appium import webdriver
 from datetime import datetime
 from appium.webdriver.common.touch_action import TouchAction
+from selenium.common.exceptions import NoSuchElementException
 
 
 def get_bar_move_by_pct(bounds, pct):
@@ -46,7 +47,13 @@ class AppiumDevice:
         }
         # print(self.common_desired_cap)
         # print("appium server port number :", self.port_num)
-        self.driver = webdriver.Remote("http://localhost:" + self.port_num + "/wd/hub", self.common_desired_cap)
+        try:
+            self.driver = webdriver.Remote("http://localhost:" + self.port_num + "/wd/hub", self.common_desired_cap)
+        except Exception as e:
+            print(e)
+            if 'HTTPConnection' in str(e):
+                os.system('appium --relaxed-security &')
+
         self.driver.update_settings({
             "waitForIdleTimeout": 3000,  # 3 seconds
         })
@@ -112,6 +119,11 @@ class AppiumDevice:
     def enter(self):
         self.driver.keyevent(66)
 
+    def get_module(self):
+        m = self.driver.capabilities['deviceModel']
+        m = m.replace(' ', '')
+        return m
+
     def save_screen(self, name):
         """
         Save screen with id, timestamp
@@ -128,44 +140,66 @@ class AppiumDevice:
             sleep(3)
         except Exception as e:
             print(e)
-            print("Unable to Scroll up to down")
-        finally:
-            print('move down failed')
+            print("Unable to scroll down")
 
-    def verify_signal_loss_message(self):
+    def g7_login(self, user_nm, passwd):
+        try:
+            self.driver.find_element_by_id('com.dexcom.g7:id/id_login_button').click()
+            sleep(5)
+            self.driver.find_element_by_id('username').send_keys(user_nm)
+            self.driver.keyevent(61)
+            self.driver.find_element_by_id('password').send_keys(passwd)
+            self.driver.keyevent(66)
+        except Exception as e:
+            print('Login failed ' + str(e))
+
+    def g7_verify_signal_loss_message(self):
         """
         Verify signal loss after 10 minutes with message
         :return:
         """
+        lost_help = lost_title = None
         try:
             lost_help = self.driver.find_element_by_id('com.dexcom.g7:id/id_glucose_state_card_help_button')
-        except Exception as e:
-            print('Get lost_help button failed ' + e)
+        except NoSuchElementException as e:
+            print('Get lost_help button failed ' + str(e))
 
         try:
             lost_title = self.driver.find_element_by_id('com.dexcom.g7:id/id_glucose_state_card_title_label')
-        except Exception as e:
-            print('Get lost_title  failed ' + e)
+        except NoSuchElementException as e:
+            print('Get lost_title  failed ' + str(e))
 
         if lost_help and lost_title and lost_title.text == 'Signal Loss':
             return True
         else:
             return False
 
-    def verify_signal_loss_alert(self):
+    def g7_click_ok_alert_ack(self):
+        try:
+            self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_acknowledge_button').click()
+        except Exception as e:
+            print('Clike ack alert failed ' + str(e))
+
+        try:
+            self.driver.find_element_by_id('com.dexcom.g7:id/snackbar_action').click()
+        except Exception as e:
+            print('Click bar failed ' + str(e))
+
+    def g7_verify_signal_loss_alert(self):
         """
         Verify signal loss after 20 minutes with message
         :return:
         """
+        lost_ok = lost_title = None
         try:
             lost_ok = self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_acknowledge_button')
-        except Exception as e:
-            print('Get lost_ok button failed ' + e)
+        except NoSuchElementException as e:
+            print('Get lost_ok button failed ' + str(e))
 
         try:
             lost_title = self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_title_label')
-        except Exception as e:
-            print('Get lost_title  failed ' + e)
+        except NoSuchElementException as e:
+            print('Get lost_title  failed ' + str(e))
 
         if lost_ok and lost_title and lost_title.text == 'Signal Loss':
             return True
@@ -187,9 +221,7 @@ class AppiumDevice:
             sleep(3)
         except Exception as e:
             print(e)
-            print("Unable to Scroll down to up")
-        finally:
-            print('Move up failed')
+            print("Unable to scroll up")
 
     def appium_set_volume_percentages(self, pct_list):
         """
@@ -216,4 +248,4 @@ class AppiumDevice:
                 print(e)
                 print("Unable to move the bar")
             finally:
-                print('Bar moving failed')
+                print('Done bar moving')

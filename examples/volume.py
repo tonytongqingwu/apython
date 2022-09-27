@@ -1,8 +1,7 @@
 from apython.appm import AppiumDevice
 
 
-# appium_d = AppiumDevice('573052324e573398', '4723', 'G7')  # S9
-appium_d = AppiumDevice('989AY13LAL', '4723', 'G7')
+appium_d = AppiumDevice('989AY13LAL')
 print(appium_d.driver.capabilities['deviceModel'])
 appium_d.driver.keyevent(3)
 appium_d.driver.activate_app('com.android.settings')
