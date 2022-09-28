@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='apython',
@@ -8,7 +8,7 @@ setup(
     author='tonytongqingwu',
     author_email='tony.wu@dexcom.com',
     license='Dexcom',
-    packages=['apython'],
+    packages=find_packages(),
     install_requires=['uiautomator',
                       'Appium-Python-Client==1.1.0',
                       ],
