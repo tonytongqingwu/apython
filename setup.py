@@ -2,9 +2,9 @@ from setuptools import setup
 
 setup(
     name='apython',
-    version='0.1.0',    
+    version='0.1.1',
     description='A example Python package',
-    url='https://github.com/shuds13/pyexample',
+    url='https://github.com/tonytongqingwu/apython.git',
     author='tonytongqingwu',
     author_email='tony.wu@dexcom.com',
     license='Dexcom',

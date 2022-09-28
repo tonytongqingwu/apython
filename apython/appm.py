@@ -26,8 +26,10 @@ def get_bar_move_by_pct(bounds, pct):
 
 class AppiumDevice:
     def __del__(self):
-        self.driver.stop_client()
-        # self.driver.close()
+        try:
+            self.driver.stop_client()
+        except Exception as e:
+            print(e)
 
     def __init__(self, adb_id, port_num='4723', dexcom_app_type='G7'):
         self.adb_id = adb_id
@@ -52,11 +54,15 @@ class AppiumDevice:
         except Exception as e:
             print(e)
             if 'HTTPConnection' in str(e):
-                os.system('appium --relaxed-security &')
+                print('------------------------------------------------------------------')
+                print('You need run "appium --relaxed-security" from other terminal first !')
+                print('------------------------------------------------------------------')
+                exit(1)
 
         self.driver.update_settings({
             "waitForIdleTimeout": 3000,  # 3 seconds
         })
+        print('done init')
 
     def set_adb_wifi(self, t_port):
         result = self.driver.execute_script('mobile: shell', {
@@ -167,8 +173,10 @@ class AppiumDevice:
     def g7_login(self, user_nm, passwd):
         try:
             self.driver.find_element_by_id('com.dexcom.g7:id/id_login_button').click()
-            sleep(5)
-            self.driver.find_element_by_id('username').send_keys(user_nm)
+            sleep(20)
+            username = self.driver.find_element_by_id('username')
+            username.click()
+            username.send_keys(user_nm)
             self.driver.keyevent(61)
             self.driver.find_element_by_id('password').send_keys(passwd)
             self.driver.keyevent(66)
