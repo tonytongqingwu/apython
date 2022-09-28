@@ -12,11 +12,11 @@ adbd, uiauto, appm.
 
 2. Then just run the setup.py file from that directory,
 
-`sudo python setup.py install`
+`sudo python3 setup.py install`
 
 NOTE: if you don't want to check example code or create your own scripts, just run:
 
-`pip install git+https://github.com/tonytongqingwu/apython.git#egg=apython`
+`pip3 install git+https://github.com/tonytongqingwu/apython.git#egg=apython`
 
 ## How to run
 
