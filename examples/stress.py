@@ -2,7 +2,7 @@ import sys
 import random
 import time
 import os
-from apython.apps.apps import *
+from apython.apps.app import *
 
 
 def record_top(file_name, value):

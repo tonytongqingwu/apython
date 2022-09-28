@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-from apython.apps.apps import AppiumApps, G7_APP
+from apython.apps.app import AppiumApps, G7_APP
 
 
 id_adb = sys.argv[1]
