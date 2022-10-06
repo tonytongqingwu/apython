@@ -8,8 +8,14 @@ class Music(AppiumDevice):
         pass
 
     def appium_youtube_music(self, play_time):
-        self.driver.activate_app('com.google.android.apps.youtube.music')
-        sleep(3)
+        try:
+            self.driver.activate_app('com.google.android.apps.youtube.music')
+            sleep(3)
+        except Exception as e:
+            print('Starting music errors: ')
+            print(str(e))
+            print(type(e))
+
         try:
             print("Click on search icon")
             # self.driver.find_element_by_xpath(".//android.widget.ImageView[@content-desc='Search']").click()

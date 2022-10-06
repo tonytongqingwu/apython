@@ -11,8 +11,15 @@ class MemoryFill(AppiumDevice):
         print("-------------------------------------")
         print("Memory Fill App is opened")
         print("-------------------------------------")
-        self.driver.start_activity('com.rektgames.memoryfill', 'com.rektgames.memoryfill.Views.TabbedActivity')
-        sleep(4)
+        try:
+            self.driver.start_activity('com.rektgames.memoryfill', 'com.rektgames.memoryfill.Views.TabbedActivity')
+            sleep(4)
+        except Exception as e:
+            print('Can not start memory fill app')
+            print(str(e))
+            print(type(e))
+            return
+
         try:
             print("Click on ++100MB Button")
             for i in range(8):
