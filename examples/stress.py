@@ -1,7 +1,8 @@
-import sys
 import random
 import time
 import os
+from apython.utils import get_id
+from apython.adbd import AdbDevice
 from apython.apps.app import *
 
 
@@ -16,13 +17,17 @@ def record_apps(file_name, value):
 
 
 if __name__ == '__main__':
-    """
-    adb id must be provided
-    """
-    id_adb = sys.argv[1]
+    os.system('bash appium_start.sh')
+    id_adb = get_id()
+    print('id: ---------')
     print(id_adb)
+    adb_d = AdbDevice(id_adb)
+    wip = adb_d.set_adb_wifi()
+    id_adb = wip + ':5555'
     app_d = AppiumApps(id_adb)
 
+    # start top, battery check
+    os.system('bash ./top_battery_check.sh')
     module = app_d.get_module()
     log_path = os.getenv('HOME')
     log_path = '{}/{}'.format(log_path, module)
@@ -32,12 +37,6 @@ if __name__ == '__main__':
     log_path = '{}/{}'.format(log_path, time.strftime("%Y%m%d-%H%M%S"))
     os.system('mkdir {}'.format(log_path))
 
-    min_mem_free = 4000
-    max_cpu_used = 0
-
-    print(app_d.driver.capabilities['deviceModel'])
-    top_mem = log_path + '/free_mem.log'
-    top_cpu = log_path + '/used_cpu.log'
     app_log = log_path + '/apps.log'
 
     # app_d.run_app(CAMERA)
@@ -57,15 +56,6 @@ if __name__ == '__main__':
 
         app_d.run_app(MUSIC)  # always run music
         record_apps(app_log, MUSIC)
-
-        m, c = app_d.get_top_info()
-        if m < min_mem_free:
-            min_mem_free = m
-            record_top(top_mem, min_mem_free)
-
-        if c > max_cpu_used:
-            max_cpu_used = c
-            record_top(top_cpu, max_cpu_used)
 
         app_d.run_app(G7_APP)
         record_apps(app_log, G7_APP)

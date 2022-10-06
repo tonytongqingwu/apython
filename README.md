@@ -18,17 +18,12 @@ NOTE: if you don't want to check example code or create your own scripts, just r
 
 `pip3 install git+https://github.com/tonytongqingwu/apython.git#egg=apython`
 
-## How to run
+## How to run stress test
 
-1. Start appium:
-
-`appium --relaxed-security `
-
+1. Connect your device with USB, make sure adb enabled for development
 2. Check examples folder, create own test, or just run:
 
-`python3 examples/stress.py R58R50YXKEP  
-
-With serial number 
+`python3 stress.py`
 
 ## Check logs:
 

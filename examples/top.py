@@ -7,8 +7,8 @@ input: adb id
 """
 id_adb = sys.argv[1]
 a_d = AdbDevice(id_adb)
-w_ip = a_d.set_adb_wifi()
+m, c = a_d.adb_get_top_info()
 
-print(w_ip)
+print('Free memory : {} and used cpu : {}'.format(m, c))
 
 

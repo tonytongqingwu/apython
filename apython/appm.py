@@ -1,6 +1,5 @@
 import os
 import sys
-import subprocess
 import datetime
 import base64
 import re
@@ -10,6 +9,7 @@ from appium import webdriver
 from datetime import datetime
 from appium.webdriver.common.touch_action import TouchAction
 from selenium.common.exceptions import NoSuchElementException
+from apython.utils import get_battery_level, get_top_info
 
 
 def get_bar_move_by_pct(bounds, pct):
@@ -40,10 +40,10 @@ class AppiumDevice:
             "platformName": "Android",
             "udid": self.adb_id,
             "automationName": "UiAutomator2",
-            "adbExecTimeout": 60000,
-            "appWaitDuration": 60000,
+            "adbExecTimeout": 90000,
+            "appWaitDuration": 90000,
             "uiautomator2ServerLaunchTimeout": 90000,
-            "uiautomator2ServerInstallTimeout": 60000,
+            "uiautomator2ServerInstallTimeout": 90000,
             "androidInstallTimeout": 180000,
             "disableWindowAnimation": True
         }
@@ -64,31 +64,19 @@ class AppiumDevice:
         })
         print('done init')
 
-    def set_adb_wifi(self, t_port):
+    def adb_get_battery_level(self):
         result = self.driver.execute_script('mobile: shell', {
-            'command': 'ip',
-            'args': ['addr', 'show', 'wlan0', '|', 'grep', '"global', 'wlan"'],
+            'command': 'dumpsys battery',
+            'args': ['battery', '|', 'grep', 'level'],
             'includeStderr': True,
             'timeout': 5000
         })
 
         out = result['stdout']
         print(out)
-        m = re.search('inet (\d+\.\d+\.\d+\.\d+)\/24 brd.+wlan', out)
-        if m:
-            wlan_ip = m.group(1)
-            print(wlan_ip)
-
-            os.system('adb -s ' + self.adb_id + ' tcpip ' + t_port)
-            os.system('adb -s {} connect {}:{}'.format(self.adb_id, wlan_ip, t_port))
-            os.system('adb devices')
-
-            print('Connecting to wifi now, you can disconnect cable anytime now')
-            return wlan_ip
+        return get_battery_level(out)
 
     def get_top_info(self):
-        mem_free = cpu_total = cpu_idle = cpu_used = 0
-        mem_unit = 'M'
         result = self.driver.execute_script('mobile: shell', {
             'command': 'top',
             'args': ['-n', '1', '|', 'head', '-4'],
@@ -96,29 +84,7 @@ class AppiumDevice:
             'timeout': 5000
         })
 
-        out = re.sub(r'\W+', '', result['stdout'])
-        print(out)
-        # used60Mfree51MbuffersSwap20Gtotal14Gused517Mfree920Mcached800cpu117user0nice60sys607idle0iow13irq3sirq0host
-        # used1885132Kfree6438912buffersSwap2621436Ktotal1942704Kused678732Kfree960304Kcached800cpu100user0nice107sys579idle0iow10irq3sirq0host
-        m = re.search('used(\d+)(\w)free.+\d+\wfree.+cached(\d+)cpu.+sys(\d+)idle', out)
-        if m:
-            mem_free = int(m.group(1))
-            mem_unit = m.group(2)
-            cpu_total = int(m.group(3))
-            cpu_idle = int(m.group(4))
-
-            print(cpu_idle)
-            print(cpu_total)
-            print(mem_free)
-            print(mem_unit)
-            cpu_used = int(cpu_total) - int(cpu_idle)
-
-            if mem_unit == 'G':
-                mem_free *= 1000
-            elif mem_unit == 'K':
-                mem_free = int(mem_free / 1000)
-
-        return mem_free, cpu_used
+        return get_top_info(result['stdout'])
 
     def server_error_recovery(self):
         print("Server Error Recovery .... .. .... ......")
@@ -170,16 +136,20 @@ class AppiumDevice:
             print(e)
             print("Unable to scroll down")
 
-    def g7_login(self, user_nm, passwd):
+    def g7_login(self, user_nm, pass_wd):
         try:
             self.driver.find_element_by_id('com.dexcom.g7:id/id_login_button').click()
             sleep(20)
-            username = self.driver.find_element_by_id('username')
+            username = self.driver.find_element_by_xpath("//android.widget.EditText[@resource-id='username']")
             username.click()
             username.send_keys(user_nm)
-            self.driver.keyevent(61)
-            self.driver.find_element_by_id('password').send_keys(passwd)
+            # self.driver.keyevent(61)
+            passwd = self.driver.find_element_by_xpath("//android.widget.EditText[@resource-id='password']")
+            passwd.send_keys(pass_wd)
             self.driver.keyevent(66)
+            sleep(20)
+            self.driver.find_element_by_xpath("(//android.widget.CheckBox)[1]").click()
+            self.driver.find_element_by_xpath("(//android.widget.CheckBox)[2]").click()
         except Exception as e:
             print('Login failed ' + str(e))
 
@@ -268,7 +238,7 @@ class AppiumDevice:
         bars = self.driver.find_elements_by_id('android:id/seekbar')
         for i in range(4):
             bounds = bars[i].get_attribute('bounds')
-            print(bounds)
+            print(type(bounds))
             start_x, start_y, end_x, end_y = get_bar_move_by_pct(bounds, pct_list[i])
             try:
                 touch = TouchAction(self.driver)

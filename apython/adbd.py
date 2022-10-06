@@ -1,6 +1,8 @@
 import os
 import time
+import re
 from time import sleep
+from apython.utils import run_command, get_battery_level, get_top_info
 
 
 class AdbDevice:
@@ -145,3 +147,42 @@ class AdbDevice:
 
     def key_back(self):
         self.key_five(4)
+
+    def adb_get_battery_level(self):
+        r_code, s_out, s_err = run_command('adb -s {0} shell dumpsys battery | grep level'.format(self.adb_id))
+        if r_code == 0:
+            return get_battery_level(s_out)
+        else:
+            return 0
+
+    def adb_get_top_info(self):
+        r_code, s_out, s_err = run_command('adb -s {0} shell top -n 1 | head -4'.format(self.adb_id))
+        if r_code == 0:
+            return get_top_info(s_out)
+        else:
+            return 0, 0
+
+    def set_adb_wifi(self, t_port=5555):
+        r_code, s_out, s_err = run_command('adb -s {0} shell ip addr show wlan0 | grep "global wlan"'.format(self.adb_id))
+        if r_code == 0:
+            # print(s_out)
+            m = re.search('inet (\d+\.\d+\.\d+\.\d+)\/24 brd.+wlan', s_out)
+            if m:
+                wlan_ip = m.group(1)
+                print(wlan_ip)
+
+                os.system('adb -s {} tcpip {}'.format(self.adb_id, t_port))
+                os.system('adb -s {} connect {}:{}'.format(self.adb_id, wlan_ip, t_port))
+                os.system('adb devices')
+
+                # print('Connecting to wifi now, you can disconnect cable anytime now')
+                return wlan_ip
+        else:
+            print('Can not get wlan ip, return code {}, error {}'.format(r_code, s_err))
+            return ''
+
+    def adb_get_model(self):
+        r_code, s_out, s_err = run_command('adb -s {0} shell getprop ro.product.model'.format(self.adb_id))
+        if r_code == 0:
+            m = s_out.replace(' ', '').strip()
+            return m
