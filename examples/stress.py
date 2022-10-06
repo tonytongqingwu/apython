@@ -1,8 +1,7 @@
 import random
 import time
 import os
-from apython.utils import get_id
-from apython.adbd import AdbDevice
+from apython.utils import get_wip_id, create_log_path
 from apython.apps.app import *
 
 
@@ -17,25 +16,19 @@ def record_apps(file_name, value):
 
 
 if __name__ == '__main__':
+    os.system('bash kill_ps.sh')
     os.system('bash appium_start.sh')
-    id_adb = get_id()
-    print('id: ---------')
+    # start top, battery check, create wip,
+    os.system('bash ./top_battery_check.sh')
+
+    # get wip
+    id_adb = get_wip_id()
+    print('wip is:')
     print(id_adb)
-    adb_d = AdbDevice(id_adb)
-    wip = adb_d.set_adb_wifi()
-    id_adb = wip + ':5555'
     app_d = AppiumApps(id_adb)
 
-    # start top, battery check
-    os.system('bash ./top_battery_check.sh')
-    module = app_d.get_module()
-    log_path = os.getenv('HOME')
-    log_path = '{}/{}'.format(log_path, module)
-    os.system('mkdir {}'.format(log_path))
-    log_path = '{}/{}'.format(log_path, id_adb)
-    os.system('mkdir {}'.format(log_path))
-    log_path = '{}/{}'.format(log_path, time.strftime("%Y%m%d-%H%M%S"))
-    os.system('mkdir {}'.format(log_path))
+    model = app_d.get_model()
+    log_path = create_log_path(model, id_adb)
 
     app_log = log_path + '/apps.log'
 

@@ -113,7 +113,7 @@ class AppiumDevice:
     def enter(self):
         self.driver.keyevent(66)
 
-    def get_module(self):
+    def get_model(self):
         m = self.driver.capabilities['deviceModel']
         m = m.replace(' ', '')
         return m

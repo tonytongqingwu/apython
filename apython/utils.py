@@ -1,6 +1,7 @@
 import os
 import subprocess
 import re
+import time
 
 
 def record_top(file_name, value):
@@ -113,3 +114,15 @@ def get_wip_id():
     else:
         print(r_code)
         return ''
+
+
+def create_log_path(model, id_adb):
+    log_path = os.getenv('HOME')
+    log_path = '{}/{}'.format(log_path, model)
+    os.system('mkdir {}'.format(log_path))
+    log_path = '{}/{}'.format(log_path, id_adb)
+    os.system('mkdir {}'.format(log_path))
+    log_path = '{}/{}'.format(log_path, time.strftime("%Y%m%d-%H%M"))
+    os.system('mkdir {}'.format(log_path))
+
+    return log_path

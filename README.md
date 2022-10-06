@@ -10,6 +10,10 @@ adbd, uiauto, appm.
 
 `mkdir ~/Sandbox/ ; cd ~/Sandbox && git clone https://github.com/tonytongqingwu/apython.git`   
 
+NOTE: if you have control USB board, also clone this:
+
+`cd ~/Sandbox && git clone https://github.com/dexcom-inc/G7X_Tests.git`
+
 2. Then just run the setup.py file from that directory,
 
 `sudo python3 setup.py install`
