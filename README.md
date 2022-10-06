@@ -6,9 +6,9 @@ adbd, uiauto, appm.
 
 ## install apython
 
-1. Clone this repository.
+1. Clone this repository to your home folder, cd ~/Sandbox/
 
-`git clone https://github.com/tonytongqingwu/apython.git`   
+`mkdir ~/Sandbox/ ; cd ~/Sandbox && git clone https://github.com/tonytongqingwu/apython.git`   
 
 2. Then just run the setup.py file from that directory,
 
