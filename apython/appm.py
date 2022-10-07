@@ -9,7 +9,7 @@ from appium import webdriver
 from datetime import datetime
 from appium.webdriver.common.touch_action import TouchAction
 from selenium.common.exceptions import NoSuchElementException
-from apython.utils import get_battery_level, get_top_info
+from apython.utils import get_battery_level, get_top_info, remove_appium
 
 
 def get_bar_move_by_pct(bounds, pct):
@@ -50,6 +50,7 @@ class AppiumDevice:
         # print(self.common_desired_cap)
         # print("appium server port number :", self.port_num)
         try:
+            # self.server_error_recovery()
             self.driver = webdriver.Remote("http://localhost:" + self.port_num + "/wd/hub", self.common_desired_cap)
         except Exception as e:
             print(e)
@@ -88,12 +89,7 @@ class AppiumDevice:
 
     def server_error_recovery(self):
         print("Server Error Recovery .... .. .... ......")
-        os.system("adb -s " + self.adb_id + " uninstall io.appium.uiautomator2.server")
-        sleep(2)
-        os.system("adb -s " + self.adb_id + " uninstall io.appium.uiautomator2.server.test")
-        sleep(2)
-        os.system("adb -s " + self.adb_id + " uninstall io.appium.settings")
-        sleep(2)
+        remove_appium(self.adb_id)
         self.driver = webdriver.Remote("http://localhost:" + self.port_num + "/wd/hub", self.common_desired_cap)
 
     def adb_open_url(self, url):
@@ -139,7 +135,7 @@ class AppiumDevice:
     def g7_login(self, user_nm, pass_wd):
         try:
             self.driver.find_element_by_id('com.dexcom.g7:id/id_login_button').click()
-            sleep(20)
+            sleep(30)
             username = self.driver.find_element_by_xpath("//android.widget.EditText[@resource-id='username']")
             username.click()
             username.send_keys(user_nm)
@@ -147,7 +143,7 @@ class AppiumDevice:
             passwd = self.driver.find_element_by_xpath("//android.widget.EditText[@resource-id='password']")
             passwd.send_keys(pass_wd)
             self.driver.keyevent(66)
-            sleep(20)
+            sleep(60)
             self.driver.find_element_by_xpath("(//android.widget.CheckBox)[1]").click()
             self.driver.find_element_by_xpath("(//android.widget.CheckBox)[2]").click()
         except Exception as e:

@@ -6,7 +6,7 @@ adbd, uiauto, appm.
 
 ## install apython
 
-1. Clone this repository to your home folder, cd ~/Sandbox/
+1. Clone python package use following command:
 
 `mkdir ~/Sandbox/ ; cd ~/Sandbox && git clone https://github.com/tonytongqingwu/apython.git`   
 

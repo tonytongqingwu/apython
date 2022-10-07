@@ -1,7 +1,7 @@
 import random
-import time
 import os
-from apython.utils import get_wip_id, create_log_path
+from time import sleep
+from apython.utils import get_wip_id, create_log_path, remove_appium
 from apython.apps.app import *
 
 
@@ -17,18 +17,27 @@ def record_apps(file_name, value):
 
 if __name__ == '__main__':
     os.system('bash kill_ps.sh')
-    os.system('bash appium_start.sh')
     # start top, battery check, create wip,
     os.system('bash ./top_battery_check.sh')
-
+    sleep(10)
+    # power should cut already, so use wifi for appium
     # get wip
     id_adb = get_wip_id()
     print('wip is:')
     print(id_adb)
+    remove_appium(id_adb)
+
+    os.system('bash appium_start.sh')
+    sleep(20)
+
     app_d = AppiumApps(id_adb)
+    if id_adb == '':
+        print('No wifi is setup , exit !!!')
+        exit(1)
 
     model = app_d.get_model()
     log_path = create_log_path(model, id_adb)
+    print('log path {}'.format(log_path))
 
     app_log = log_path + '/apps.log'
 

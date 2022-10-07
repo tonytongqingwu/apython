@@ -10,12 +10,19 @@ USB_PWR_OFF = 'python3 ' + os.getenv('HOME') + \
 if __name__ == '__main__':
     # set wip, must turn on power to get adb back
     os.system(USB_PWR_OFF + ' off')
+    sleep(10)
     id_adb = get_id()
     print('id: ---------')
     print(id_adb)
     adb_d = AdbDevice(id_adb)
     wip = adb_d.set_adb_wifi()
     id_adb = wip + ':5555'
+
+    if wip:
+        os.system(USB_PWR_OFF + ' on')
+    else:
+        print('No wifi is setup , exit !!!')
+        exit(1)
 
     adb_d = AdbDevice(id_adb)
     print('wip is:')
@@ -25,6 +32,7 @@ if __name__ == '__main__':
     model = adb_d.adb_get_model()
     print('----{}-----'.format(model))
     log_path = create_log_path(model, id_adb)
+    print('log path {}'.format(log_path))
 
     min_mem_free = 4000
     max_cpu_used = 0
