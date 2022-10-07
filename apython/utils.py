@@ -146,17 +146,17 @@ def get_transmitter_info(url='http://localhost:7890/nodes/'):
     da = r.text
     data = json.loads(da)
     data = data[0]
-    print(data)
+    # print(data)
     transmitter = (data['transmitters'])[0]
-    print(transmitter)
+    # print(transmitter)
     transmitter_id = transmitter['transmitterId']
     pair_code = transmitter['pairingCode']
     address = transmitter['address']
     prod_type = transmitter['productType']
 
-    print(transmitter_id)
-    print(pair_code)
-    print(address)
-    print(prod_type)
+    # print(transmitter_id)
+    # print(pair_code)
+    # print(address)
+    # print(prod_type)
 
     return prod_type, address, transmitter_id, pair_code

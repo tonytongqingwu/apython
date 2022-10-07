@@ -26,3 +26,7 @@ class G7(AppiumDevice):
                 self.driver.quit()
                 sleep(2)
                 self.server_error_recovery()
+        finally:
+            print('Done g7')
+            self.back(5)
+            self.home()
