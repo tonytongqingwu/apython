@@ -19,21 +19,23 @@ if __name__ == '__main__':
     os.system('bash kill_ps.sh')
     # start top, battery check, create wip,
     os.system('bash ./top_battery_check.sh')
-    sleep(10)
+    sleep(20)
     # power should cut already, so use wifi for appium
     # get wip
     id_adb = get_wip_id()
     print('wip is:')
     print(id_adb)
+    if id_adb == '':
+        print('No wifi is setup , exit !!!')
+        os.system('bash ./kill_ps.sh')
+        exit(1)
+
     remove_appium(id_adb)
 
     os.system('bash appium_start.sh')
     sleep(20)
 
     app_d = AppiumApps(id_adb)
-    if id_adb == '':
-        print('No wifi is setup , exit !!!')
-        exit(1)
 
     model = app_d.get_model()
     log_path = create_log_path(model, id_adb)
