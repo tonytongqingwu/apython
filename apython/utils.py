@@ -160,3 +160,17 @@ def get_transmitter_info(url='http://localhost:7890/nodes/'):
     # print(prod_type)
 
     return prod_type, address, transmitter_id, pair_code
+
+
+def check_signal_loss_message(file_name):
+    cmd = "grep 'id_glucose_state_card_title_label' {} | grep 'Signal Loss'".format(file_name)
+    print(cmd)
+    r_code, s_out, s_err = run_command(cmd)
+    print('out ----------------')
+    print(s_out)
+    print('err ----------------')
+    print(s_err)
+    if r_code == 0:
+        return True
+    else:
+        return False

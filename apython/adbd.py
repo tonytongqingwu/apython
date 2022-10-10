@@ -162,6 +162,15 @@ class AdbDevice:
         else:
             return 0, 0
 
+    def dump_screen(self, s_name):
+        """
+        dump screen to png and txt file
+        :param s_name: full path of dump file (folder/name)
+        :return:
+        """
+        os.system('adb -s {} exec-out screencap -p > {}.png'.format(self.adb_id, s_name))
+        os.system('adb -s {} exec-out uiautomator dump /dev/tty > {}.txt'.format(self.adb_id, s_name))
+
     def set_adb_wifi(self, t_port=5555):
         r_code, s_out, s_err = run_command('adb -s {0} shell ip addr show wlan0 | grep "global wlan"'.format(self.adb_id))
         if r_code == 0:

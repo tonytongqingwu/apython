@@ -43,10 +43,10 @@ if __name__ == '__main__':
     # app_d.run_app(CAMERA)
     while True:
         # check battery
-        if adb_d.adb_get_battery_level() < 8:
+        if adb_d.adb_get_battery_level() < 4:
             print('Less than level 8 for battery, charging now')
             os.system(USB_PWR_OFF + ' off')
-        elif adb_d.adb_get_battery_level() > 28:
+        elif adb_d.adb_get_battery_level() > 18:
             print('Over 98, cut the power now')
             os.system(USB_PWR_OFF + ' on')
         else:
