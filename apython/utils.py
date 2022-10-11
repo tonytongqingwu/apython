@@ -133,11 +133,11 @@ def create_log_path(model, id_adb):
 
 
 def remove_appium(id_adb):
-    os.system("adb -s " + id_adb + " uninstall io.appium.uiautomator2.server")
+    os.system("adb -s {} uninstall io.appium.uiautomator2.server".format(id_adb))
     sleep(2)
-    os.system("adb -s " + id_adb + " uninstall io.appium.uiautomator2.server.test")
+    os.system("adb -s {} uninstall io.appium.uiautomator2.server.test".format(id_adb))
     sleep(2)
-    os.system("adb -s " + id_adb + " uninstall io.appium.settings")
+    os.system("adb -s {} uninstall io.appium.settings".format(id_adb))
     sleep(2)
 
 

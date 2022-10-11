@@ -7,7 +7,7 @@ class GrpcClient:
         self.state = dict()
         self.state['pairingCode'] = pair_code
         self.state['transmitterSNR'] = transmitter_id
-        self.state['autoMode'] = 0
+        self.state['autoMode'] = 'OFF'
         self.state['commInterval'] = 'SEC_30'
         self.state['prodCertType'] = 'NON_PROD_CERTS'
         self.state['transmitterStatus'] = 'HEALTHY'
@@ -15,6 +15,19 @@ class GrpcClient:
         self.request = dict()
         self.request['address'] = address
         self.request['caller'] = 1
+
+        self.egv_request = dict()
+        self.egv_request['address'] = address
+        self.egv_request['transmitterId'] = transmitter_id
+
+    def get_egv(self):
+        result = self.client.request("G7TransmitterSimulatorService", "GetG7CommunicatedEGV", self.egv_request)
+        print(type(result))
+        egvs = result['communicatedEGV']
+        # last_3_egv = egvs[-3:]
+        # print(last_3_egv)
+        last_egv = egvs[-1]
+        return last_egv['egv']
 
     def save_state(self, state_string):
         """
@@ -29,5 +42,6 @@ class GrpcClient:
             self.state['advertisingState'] = state_string
             self.request['transmitterSimulatorState'] = self.state
 
-            result = self.client.request("G7TransmitterSimulatorService", "SaveG7TransmitterSimulatorState", self.request)
+            result = self.client.request("G7TransmitterSimulatorService", "SaveG7TransmitterSimulatorState",
+                                         self.request)
             print(result)

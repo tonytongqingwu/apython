@@ -149,6 +149,28 @@ class AppiumDevice:
         except Exception as e:
             print('Login failed ' + str(e))
 
+    def get_egv(self):
+        egv = 0
+        try:
+            egv = self.driver.find_element_by_id('com.dexcom.g7:id/id_glucose_compass_egv').text
+        except NoSuchElementException as e:
+            print('No EGV ' + str(e))
+        finally:
+            return egv
+
+    def verify_and_ack_alert(self):
+        ok = None
+        try:
+            ok = self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_acknowledge_button')
+        except NoSuchElementException as e:
+            print('No Alert ok' + str(e))
+        finally:
+            if ok:
+                ok.click()
+                return True
+            else:
+                return False
+
     def g7_verify_signal_loss_message(self):
         """
         Verify signal loss after 10 minutes with message
