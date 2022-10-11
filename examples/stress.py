@@ -106,8 +106,9 @@ if __name__ == '__main__':
             # over 16 minute
             if (now - pause_time).total_seconds() > 1100:
                 print('Fail: Message is too late')
-            if (now - start_time).total_seconds() > 1900:
-                print('Fail: Signal is not recovered - signal loss message still there')
+            if start_time is not None:
+                if (now - start_time).total_seconds() > 1900:
+                    print('Fail: Signal is not recovered - signal loss message still there')
             print("\033[91mSignal loss message !!!\033[0m")
             app_d.save_screen('{}/signal_loss_message'.format(log_path))
         else:

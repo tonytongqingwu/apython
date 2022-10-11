@@ -14,6 +14,12 @@ if __name__ == '__main__':
     id_adb = get_id()
     print('id: ---------')
     print(id_adb)
+
+    if id_adb == '':
+        print('Device must have no power, gives sometime to charge a bit')
+        sleep(30)
+        exit(1)
+
     adb_d = AdbDevice(id_adb)
     wip = adb_d.set_adb_wifi()
     id_adb = wip + ':5555'
@@ -43,10 +49,18 @@ if __name__ == '__main__':
     # app_d.run_app(CAMERA)
     while True:
         # check battery
-        if adb_d.adb_get_battery_level() < 4:
-            print('Less than level 8 for battery, charging now')
-            os.system(USB_PWR_OFF + ' off')
-        elif adb_d.adb_get_battery_level() > 18:
+
+        # run test with battery level 4 ~ 18:
+        # if adb_d.adb_get_battery_level() < 4:
+        #     print('Less than level 8 for battery, charging now')
+        #     os.system(USB_PWR_OFF + ' off')
+        # elif adb_d.adb_get_battery_level() > 18:
+        #     print('Over 18, cut the power now')
+        #     os.system(USB_PWR_OFF + ' on')
+
+        # never charge until battery dies, and adb got lost connection
+        # 98 battery can run a while
+        if adb_d.adb_get_battery_level() > 98:
             print('Over 98, cut the power now')
             os.system(USB_PWR_OFF + ' on')
         else:
@@ -62,4 +76,3 @@ if __name__ == '__main__':
         if c > max_cpu_used:
             max_cpu_used = c
             record_top(top_cpu, max_cpu_used)
-
