@@ -40,10 +40,10 @@ class AppiumDevice:
             "platformName": "Android",
             "udid": self.adb_id,
             "automationName": "UiAutomator2",
-            "adbExecTimeout": 90000,
-            "appWaitDuration": 90000,
-            "uiautomator2ServerLaunchTimeout": 90000,
-            "uiautomator2ServerInstallTimeout": 90000,
+            "adbExecTimeout": 190000,
+            "appWaitDuration": 190000,
+            "uiautomator2ServerLaunchTimeout": 190000,
+            "uiautomator2ServerInstallTimeout": 190000,
             "androidInstallTimeout": 180000,
             "disableWindowAnimation": True
         }
@@ -150,7 +150,7 @@ class AppiumDevice:
             print('Login failed ' + str(e))
 
     def get_egv(self):
-        egv = 0
+        egv = ''
         try:
             egv = self.driver.find_element_by_id('com.dexcom.g7:id/id_glucose_compass_egv').text
         except NoSuchElementException as e:

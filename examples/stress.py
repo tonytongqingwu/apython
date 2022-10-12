@@ -91,7 +91,6 @@ if __name__ == '__main__':
         else:
             print('Sleep time, make sure uncheck automatic mode on DrStrange.')
 
-            print("Test signal lost")
         if app_d.g7_verify_signal_loss_alert():
             print("\033[91mSignal lost alert !!!\033[0m")
             # over 30 minute
@@ -118,9 +117,13 @@ if __name__ == '__main__':
             print(m_egv)
 
             if str(egv) == m_egv:
-                print('match')
+                print('Pass: match')
             else:
-                print('EGV not match: transmitter>{}, {}<mobile'.format(egv, m_egv))
+                print('Fail: EGV not match: transmitter>{}, {}<mobile'.format(egv, m_egv))
+
+            if m_egv == '':
+                print('Fail: G7 app has no EGV !!!')
+                app_d.save_screen('{}/no_egv'.format(log_path))
 
             print('Click ack OK button if any other alert')
             app_d.g7_click_ok_alert_ack()

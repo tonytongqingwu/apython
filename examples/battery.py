@@ -51,20 +51,21 @@ if __name__ == '__main__':
         # check battery
 
         # run test with battery level 4 ~ 18:
-        # if adb_d.adb_get_battery_level() < 4:
-        #     print('Less than level 8 for battery, charging now')
-        #     os.system(USB_PWR_OFF + ' off')
-        # elif adb_d.adb_get_battery_level() > 18:
-        #     print('Over 18, cut the power now')
-        #     os.system(USB_PWR_OFF + ' on')
+        # level 1 is not enough so continue charge
+        if adb_d.adb_get_battery_level() < 4:
+            print('Less than level 8 for battery, charging now')
+            os.system(USB_PWR_OFF + ' off')
+        elif adb_d.adb_get_battery_level() > 18:
+            print('Over 18, cut the power now')
+            os.system(USB_PWR_OFF + ' on')
 
         # never charge until battery dies, and adb got lost connection
         # 98 battery can run a while
-        if adb_d.adb_get_battery_level() > 98:
-            print('Over 98, cut the power now')
-            os.system(USB_PWR_OFF + ' on')
-        else:
-            print('battery is ok now')
+        # if adb_d.adb_get_battery_level() > 98:
+        #     print('Over 98, cut the power now')
+        #     os.system(USB_PWR_OFF + ' on')
+        # else:
+        #     print('battery is ok now')
 
         sleep(60)
         # get top info
