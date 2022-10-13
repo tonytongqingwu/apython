@@ -40,6 +40,10 @@ def log_info(file_name, value):
         f.writelines(value + '\n')
 
 
+def logcat(log_path, adb_id):
+    os.system('adb -s {} -d logcat com.dexcom.g7:V -d > {}/logcat.txt'.format(adb_id, log_path))
+
+
 def get_app_list(apps_file):
     with open(apps_file) as f:
         apps_string = f.read().rstrip()

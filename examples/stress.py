@@ -5,7 +5,7 @@ from datetime import datetime
 from apython.utils import get_wip_id, create_log_path, remove_appium
 from apython.apps.app import *
 from apython.grpc.gclient import GrpcClient
-from apython.utils import get_transmitter_info, log_info, record_apps
+from apython.utils import get_transmitter_info, log_info, record_apps, logcat
 
 
 if __name__ == '__main__':
@@ -89,33 +89,34 @@ if __name__ == '__main__':
         else:
             print('Sleep time, make sure uncheck automatic mode on DrStrange.')
 
-        msg = 'Check G7 at {}'.format(datetime.now())
+        msg = '{} Check G7'.format(datetime.now())
         log_info(info, msg)
+        logcat(log_path, id_adb)
         if app_d.g7_verify_signal_loss_alert():
             print("\033[91mSignal lost alert !!!\033[0m")
-            msg = 'Signal lost alert at {}'.format(datetime.now())
+            msg = ' {} Signal lost alert'.format(datetime.now())
             log_info(info, msg)
             # over 30 minute
             if (now - pause_time).total_seconds() > 2000:
                 print('Fail: Alert is too late')
-                log_info(info, 'Fail: Alert is too late at {}'.format(datetime.now()))
+                log_info(info, '{} Fail: Alert is too late'.format(datetime.now()))
                 if start_time is not None:
                     if (now - start_time).total_seconds() > 1900:
                         print('Fail: Signal is not recovered')
-                        log_info(info, 'Fail: Signal is not recovered at {}'.format(datetime.now()))
+                        log_info(info, '{} Fail: Signal is not recovered'.format(datetime.now()))
             app_d.save_screen('{}/signal_loss_alert'.format(log_path))
             app_d.g7_click_ok_alert_ack()
         elif app_d.g7_verify_signal_loss_message():
             # over 16 minute
             if (now - pause_time).total_seconds() > 1100:
                 print('Fail: Signal Lost Message is too late')
-                log_info(info, 'Fail: Signal is not recovered at {}'.format(datetime.now()))
+                log_info(info, '{} Fail: Signal is not recovered'.format(datetime.now()))
             if start_time is not None:
                 if (now - start_time).total_seconds() > 1900:
                     print('Fail: Signal is not recovered - signal loss message still there')
-                    log_info(info, 'Fail: Signal is not recovered at {}'.format(datetime.now()))
+                    log_info(info, '{} Fail: Signal is not recovered'.format(datetime.now()))
             print("\033[91mSignal loss message !!!\033[0m")
-            log_info(info, 'Signal loss message at {}'.format(datetime.now()))
+            log_info(info, '{} Signal loss message'.format(datetime.now()))
             app_d.save_screen('{}/signal_loss_message'.format(log_path))
         else:
             egv = g.get_egv()
@@ -127,7 +128,7 @@ if __name__ == '__main__':
                 print('Pass: match')
             else:
                 print('Fail: EGV not match: transmitter>{}, {}<mobile'.format(egv, m_egv))
-                msg = 'Fail: EGV not match: transmitter>{}, {}<mobile at {}'.format(egv, m_egv, datetime.now())
+                msg = '{} Fail: EGV not match: transmitter>{}, {}<mobile'.format(egv, m_egv, datetime.now())
                 log_info(info, msg)
 
             if m_egv == '':
