@@ -29,6 +29,17 @@ def record_apps(file_name, value):
         f.write(value + ',')
 
 
+def log_info(file_name, value):
+    """
+    Append app name to a file
+    :param file_name: any file
+    :param value: any name
+    :return:
+    """
+    with open(file_name, 'a') as f:
+        f.writelines(value + '\n')
+
+
 def get_app_list(apps_file):
     with open(apps_file) as f:
         apps_string = f.read().rstrip()
@@ -174,3 +185,29 @@ def check_signal_loss_message(file_name):
         return True
     else:
         return False
+
+
+def get_widget_bounds(bounds):
+    print('bound is '.format(bounds))
+    start_x = start_y = end_x = end_y = 0
+    m = re.search('^\[(\d+),(\d+)\]\[(\d+),(\d+)\]', bounds)
+    if m:
+        start_x = int(m.group(1))
+        start_y = int(m.group(2))
+        end_x = int(m.group(3))
+        end_y = int(m.group(4))
+
+    return start_x, start_y, end_x, end_y
+
+
+def find_element_has_text_with_bounds(file_name, text):
+    with open(file_name) as f:
+        for line in f:
+            print(line)
+            # m = re.search(text + '.+bounds="(\[.+\])"', line)  #  also works
+            m = re.search('text.+' + text + '.+bounds="(\[.+\])"', line)
+            if m:
+                print('Found match')
+                b = m.group(1)
+                print(b)
+                return get_widget_bounds(b)
