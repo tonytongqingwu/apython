@@ -3,6 +3,6 @@
 # Opens a new Terminal window
 osascript  <<EOF
 tell app "Terminal"
-  do script "appium --relaxed-security &"
+  do script "appium --relaxed-security --command-timeout 120000 &"
 end tell
 EOF

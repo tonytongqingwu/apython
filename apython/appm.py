@@ -132,6 +132,30 @@ class AppiumDevice:
             print(e)
             print("Unable to scroll down")
 
+    def g7_login_later(self):
+        try:
+            self.driver.find_element_by_id('com.dexcom.g7:id/id_login_later_button').click()
+        except Exception as e:
+            print('Login screen failed ' + str(e))
+
+    def g7_re_login(self, user_nm, pass_wd):
+        try:
+            self.driver.find_element_by_id('com.dexcom.g7:id/id_login_now_button').click()
+            sleep(30)
+            self.driver.find_element_by_id('login_id_btn').click()
+            # username = self.driver.find_element_by_xpath("//android.widget.EditText[@resource-id='username']")
+            # username.click()
+            # username.send_keys(user_nm)
+            # # self.driver.keyevent(61)
+            # passwd = self.driver.find_element_by_xpath("//android.widget.EditText[@resource-id='password']")
+            # passwd.send_keys(pass_wd)
+            # self.driver.keyevent(66)
+            # sleep(60)
+            # self.driver.find_element_by_xpath("(//android.widget.CheckBox)[1]").click()
+            # self.driver.find_element_by_xpath("(//android.widget.CheckBox)[2]").click()
+        except Exception as e:
+            print('Login failed ' + str(e))
+
     def g7_login(self, user_nm, pass_wd):
         try:
             self.driver.find_element_by_id('com.dexcom.g7:id/id_login_button').click()
@@ -148,6 +172,13 @@ class AppiumDevice:
             self.driver.find_element_by_xpath("(//android.widget.CheckBox)[2]").click()
         except Exception as e:
             print('Login failed ' + str(e))
+
+        try:
+            username = self.driver.find_element_by_id('mat-input-0')
+            username.click()
+            username.send_keys(user_nm)
+        except Exception as e:
+            print('Different login failed ' + str(e))
 
     def get_egv(self):
         egv = ''

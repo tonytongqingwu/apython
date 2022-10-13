@@ -27,7 +27,7 @@ NOTE: if you don't want to check example code or create your own scripts, just r
 1. Connect your device with USB, make sure adb enabled for development
 2. Check examples folder, create own test, or just run:
 
-`python3 stress.py`
+`bash stress_check.sh`
 
 ## Check logs:
 
