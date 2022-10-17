@@ -156,7 +156,8 @@ def remove_appium(id_adb):
     sleep(2)
 
 
-def get_transmitter_info(url='http://localhost:7890/nodes/'):
+# old method, not working all the time due to update device
+def get_transmitter_info_old(url='http://localhost:7890/nodes/'):
     r = requests.get(url)
     da = r.text
     data = json.loads(da)
@@ -173,6 +174,45 @@ def get_transmitter_info(url='http://localhost:7890/nodes/'):
     # print(pair_code)
     # print(address)
     # print(prod_type)
+
+    return prod_type, address, transmitter_id, pair_code
+
+
+def get_transmitter_info():
+    transmitter_id = pair_code = 0
+    address = ''
+    prod_type = 'G7'
+    r_code, s_out, s_err = run_command('docker logs jarvis_server --since=6m')
+
+    if r_code == 0:
+        print('Get all info')
+        s_out = s_out.replace(' ', '').strip()
+        # print(s_out)
+        m = re.search('pairingCode:(\d+)', s_out)
+        o = re.search('address:\"(\d+\.\d+\.\d+\.\d+)\"', s_out)
+        n = re.search('transmitterId:\"(\d+)\"', s_out)
+        if m:
+            pair_code = int(m.group(1))
+        else:
+            print('No pattern for code')
+
+        if o:
+            address = o.group(1)
+        else:
+            print('No pattern for address')
+
+        if n:
+            transmitter_id = n.group(1)
+        else:
+            print('No pattern for id')
+    else:
+        print(s_err)
+        print('Get no info')
+
+    print(transmitter_id)
+    print(pair_code)
+    print(address)
+    print(prod_type)
 
     return prod_type, address, transmitter_id, pair_code
 
@@ -215,3 +255,5 @@ def find_element_has_text_with_bounds(file_name, text):
                 b = m.group(1)
                 print(b)
                 return get_widget_bounds(b)
+
+
