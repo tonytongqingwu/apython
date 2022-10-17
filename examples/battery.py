@@ -9,7 +9,7 @@ USB_PWR_OFF = 'python3 ' + os.getenv('HOME') + \
 
 if __name__ == '__main__':
     # set wip, must turn on power to get adb back
-    os.system(USB_PWR_OFF + ' off')
+    # os.system(USB_PWR_OFF + ' off')
     sleep(10)
     id_adb = get_id()
     print('id: ---------')
@@ -25,7 +25,8 @@ if __name__ == '__main__':
     id_adb = wip + ':5555'
 
     if wip:
-        os.system(USB_PWR_OFF + ' on')
+        # os.system(USB_PWR_OFF + ' on')
+        print('Got wip')
     else:
         print('No wifi is setup , exit !!!')
         exit(1)
@@ -54,10 +55,10 @@ if __name__ == '__main__':
         # level 1 is not enough so continue charge
         if adb_d.adb_get_battery_level() < 4:
             print('Less than level 8 for battery, charging now')
-            os.system(USB_PWR_OFF + ' off')
+            # os.system(USB_PWR_OFF + ' off')
         elif adb_d.adb_get_battery_level() > 18:
             print('Over 18, cut the power now')
-            os.system(USB_PWR_OFF + ' on')
+            # os.system(USB_PWR_OFF + ' on')
 
         # never charge until battery dies, and adb got lost connection
         # 98 battery can run a while
