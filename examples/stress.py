@@ -63,7 +63,7 @@ if __name__ == '__main__':
         record_apps(app_log, G7_APP)
 
         now = datetime.now()
-        if 8 < now.hour < 20:
+        if 0 < now.hour < 24:
             if not pause_time:
                 pause_time = now
                 msg = 'Pause at {}'.format(pause_time)
