@@ -155,28 +155,6 @@ def remove_appium(id_adb):
     sleep(2)
 
 
-# old method, not working all the time due to update device
-def get_transmitter_info_old(url='http://localhost:7890/nodes/'):
-    r = requests.get(url)
-    da = r.text
-    data = json.loads(da)
-    data = data[0]
-    # print(data)
-    transmitter = (data['transmitters'])[0]
-    # print(transmitter)
-    transmitter_id = transmitter['transmitterId']
-    pair_code = transmitter['pairingCode']
-    address = transmitter['address']
-    prod_type = transmitter['productType']
-
-    # print(transmitter_id)
-    # print(pair_code)
-    # print(address)
-    # print(prod_type)
-
-    return prod_type, address, transmitter_id, pair_code
-
-
 def get_transmitter_info():
     transmitter_id = pair_code = 0
     address = ''
