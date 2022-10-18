@@ -41,6 +41,7 @@ if __name__ == '__main__':
     g = GrpcClient(address, pair_code, transmitter_id)
     pause_time = None
     start_time = None
+    pause_count = 0
 
     while True:
         app_d.run_app(MUSIC)  # always run music
@@ -63,29 +64,25 @@ if __name__ == '__main__':
         record_apps(app_log, G7_APP)
 
         now = datetime.now()
-        if 0 < now.hour < 24:
-            if not pause_time:
-                pause_time = now
-                msg = 'Pause at {}'.format(pause_time)
-                print(msg)
-                log_info(info, msg)
-                g.save_state('PAUSE_ADVERTISING')
-            else:
-                print('has pause time already')
-                if (now - pause_time).total_seconds() > 3000:
-                    g.save_state('START_ADVERTISING')
-                    start_time = now
-                    msg = 'Start at {}'.format(start_time)
+        if 0 < now.hour < 24:  # We can always make alert not sound by settings, so run 24 hours now.
+            if pause_time is None:
+                if start_time is None or (start_time is not None and (now - start_time).total_seconds() > 1800):
+                    pause_time = now
+                    pause_count += 1
+                    msg = '{} - Pause {} times'.format(pause_time, pause_count)
                     print(msg)
                     log_info(info, msg)
-
-                    if start_time is not None:
-                        if (datetime.now() - start_time).total_seconds() > 1800:
-                            g.save_state('PAUSE_ADVERTISING')
-                            pause_time = datetime.now()
-                            msg = 'Pause at {}'.format(pause_time)
-                            print(msg)
-                            log_info(info, msg)
+                    g.save_state('PAUSE_ADVERTISING')
+                    start_time = None
+            else:
+                print('has pause time already')
+                if start_time is None and (now - pause_time).total_seconds() > 3000:
+                    g.save_state('START_ADVERTISING')
+                    start_time = now
+                    msg = '{} - Start {} times'.format(start_time, pause_time)
+                    print(msg)
+                    log_info(info, msg)
+                    pause_time = None
         else:
             print('Sleep time, make sure uncheck automatic mode on DrStrange.')
 
