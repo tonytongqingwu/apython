@@ -11,7 +11,6 @@ setup(
     packages=find_packages(),
     install_requires=['uiautomator',
                       'Appium-Python-Client==1.1.0',
-                      'requests',
                       'grpc-requests'
                       ],
 

@@ -2,7 +2,6 @@ import os
 import subprocess
 import re
 import time
-import requests
 import json
 from time import sleep
 
