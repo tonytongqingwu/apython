@@ -139,7 +139,7 @@ def create_log_path(model, id_adb):
     os.system('mkdir {}'.format(log_path))
     log_path = '{}/{}'.format(log_path, id_adb)
     os.system('mkdir {}'.format(log_path))
-    log_path = '{}/{}'.format(log_path, time.strftime("%Y%m%d-%H%M"))
+    log_path = '{}/{}'.format(log_path, time.strftime("%Y%m%d-%H"))
     os.system('mkdir {}'.format(log_path))
 
     print('-------log path {}'.format(log_path))

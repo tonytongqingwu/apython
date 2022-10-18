@@ -79,7 +79,7 @@ if __name__ == '__main__':
                 if start_time is None and (now - pause_time).total_seconds() > 3000:
                     g.save_state('START_ADVERTISING')
                     start_time = now
-                    msg = '{} - Start {} times'.format(start_time, pause_time)
+                    msg = '{} - Start {} times'.format(start_time, pause_count)
                     print(msg)
                     log_info(info, msg)
                     pause_time = None
@@ -94,24 +94,22 @@ if __name__ == '__main__':
             msg = ' {} Signal lost alert'.format(datetime.now())
             log_info(info, msg)
             # over 30 minute
-            if (now - pause_time).total_seconds() > 2000:
+            if pause_time is not None is None and (now - pause_time).total_seconds() > 2000:
                 print('Fail: Alert is too late')
                 log_info(info, '{} Fail: Alert is too late'.format(datetime.now()))
-                if start_time is not None:
-                    if (now - start_time).total_seconds() > 1900:
-                        print('Fail: Signal is not recovered')
-                        log_info(info, '{} Fail: Signal is not recovered'.format(datetime.now()))
+            if start_time is not None and (now - start_time).total_seconds() > 1900:
+                print('Fail: Signal is not recovered')
+                log_info(info, '{} Fail: Signal is not recovered'.format(datetime.now()))
             app_d.save_screen('{}/signal_loss_alert'.format(log_path))
             app_d.g7_click_ok_alert_ack()
         elif app_d.g7_verify_signal_loss_message():
             # over 16 minute
-            if (now - pause_time).total_seconds() > 1100:
+            if pause_time is not None and (now - pause_time).total_seconds() > 1100:
                 print('Fail: Signal Lost Message is too late')
                 log_info(info, '{} Fail: Signal is not recovered'.format(datetime.now()))
-            if start_time is not None:
-                if (now - start_time).total_seconds() > 1900:
-                    print('Fail: Signal is not recovered - signal loss message still there')
-                    log_info(info, '{} Fail: Signal is not recovered'.format(datetime.now()))
+            if start_time is not None and (now - start_time).total_seconds() > 1900:
+                print('Fail: Signal is not recovered - signal loss message still there')
+                log_info(info, '{} Fail: Signal is not recovered'.format(datetime.now()))
             print("\033[91mSignal loss message !!!\033[0m")
             log_info(info, '{} Signal loss message'.format(datetime.now()))
             app_d.save_screen('{}/signal_loss_message'.format(log_path))
