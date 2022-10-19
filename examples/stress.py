@@ -91,22 +91,22 @@ if __name__ == '__main__':
         logcat(log_path, id_adb)
         if app_d.g7_verify_signal_loss_alert():
             print("\033[91mSignal lost alert !!!\033[0m")
-            msg = ' {} Signal lost alert'.format(datetime.now())
+            msg = '{} Signal lost alert'.format(datetime.now())
             log_info(info, msg)
             # over 30 minute
-            if pause_time is not None is None and (now - pause_time).total_seconds() > 2000:
+            if pause_time is not None and (now - pause_time).total_seconds() > 2000:
                 print('Fail: Alert is too late')
                 log_info(info, '{} Fail: Alert is too late'.format(datetime.now()))
             if start_time is not None and (now - start_time).total_seconds() > 1900:
                 print('Fail: Signal is not recovered')
-                log_info(info, '{} Fail: Signal is not recovered'.format(datetime.now()))
+                log_info(info, '{} Fail: Signal is not recovered on alert'.format(datetime.now()))
             app_d.save_screen('{}/signal_loss_alert'.format(log_path))
             app_d.g7_click_ok_alert_ack()
         elif app_d.g7_verify_signal_loss_message():
             # over 16 minute
             if pause_time is not None and (now - pause_time).total_seconds() > 1100:
                 print('Fail: Signal Lost Message is too late')
-                log_info(info, '{} Fail: Signal is not recovered'.format(datetime.now()))
+                log_info(info, '{} Fail: Signal is not recovered on message'.format(datetime.now()))
             if start_time is not None and (now - start_time).total_seconds() > 1900:
                 print('Fail: Signal is not recovered - signal loss message still there')
                 log_info(info, '{} Fail: Signal is not recovered'.format(datetime.now()))

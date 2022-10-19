@@ -7,7 +7,7 @@ from apython.utils import record_top, get_id, create_log_path
 
 board_control_file = os.getenv('HOME') + '/Sandbox/G7X_Tests/src/test/resources/gx_utility_scripts/controlBoard.py'
 USB_PWR_OFF = 'python3 ' + board_control_file + ' usbpwr1 '
-BATTERY_LOW = 2   # when level low than this, start charging
+BATTERY_LOW = 4   # when level low than this, start charging, 2 is not working
 BATTERY_HIGH = 18  # when level high than this, stop charging
 
 if __name__ == '__main__':

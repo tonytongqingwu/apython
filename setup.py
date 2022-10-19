@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='apython',
-    version='0.1.2',
+    version='0.1.3',
     description='An Android Python package',
     url='https://github.com/tonytongqingwu/apython.git',
     author='tonytongqingwu',
@@ -20,6 +20,6 @@ setup(
         'License :: Dexcom. Inc.',
         'Operating System :: MacOS :: Linux',
         'Programming Language :: Python :: 3.8.9',
-        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.10.8',
     ],
 )
