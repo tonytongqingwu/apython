@@ -107,7 +107,7 @@ def get_top_info(out):
         if mem_unit == 'G':
             mem_free *= 1000
         elif mem_unit == 'K':
-            mem_free = int(mem_free / 1000)
+            mem_free /= 1000  # need less then 1M
 
     return mem_free, cpu_used
 

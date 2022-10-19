@@ -20,6 +20,6 @@ setup(
         'License :: Dexcom. Inc.',
         'Operating System :: MacOS :: Linux',
         'Programming Language :: Python :: 3.8.9',
-        'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.10.8',
     ],
 )
