@@ -48,4 +48,10 @@ to update the script - remove USB power support for now.
 5. Now setup G7, pair with DrStange, and ready to run:
 `cd ~/Sandbox/apython/examples ; bash stress_check.sh`
 
+## Since we need Jarvis service to control DrStrange, we need make sure it is running in docker:
+1. Run this to check
+`docker ps | grep jarvis`
+2. If not running, run this:
+`cd ~/jarvis; sh serviceDocker.sh`
+
 
