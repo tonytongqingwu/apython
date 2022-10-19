@@ -159,12 +159,12 @@ def get_transmitter_info():
     transmitter_id = pair_code = 0
     address = ''
     prod_type = 'G7'
-    r_code, s_out, s_err = run_command('docker logs jarvis_server --since=6m')
+    r_code, s_out, s_err = run_command('docker logs $(docker ps -aqf "name=^jarvis") --since=6m')
 
     if r_code == 0:
         print('Get all info')
         s_out = s_out.replace(' ', '').strip()
-        # print(s_out)
+        print(s_out)
         m = re.search('pairingCode:(\d+)', s_out)
         o = re.search('address:\"(\d+\.\d+\.\d+\.\d+)\"', s_out)
         n = re.search('transmitterId:\"(\d+)\"', s_out)
