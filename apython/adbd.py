@@ -174,8 +174,8 @@ class AdbDevice:
     def set_adb_wifi(self, t_port=5555):
         r_code, s_out, s_err = run_command('adb -s {0} shell ip addr show wlan0 | grep "global wlan"'.format(self.adb_id))
         if r_code == 0:
-            # print(s_out)
-            m = re.search('inet (\d+\.\d+\.\d+\.\d+)\/24 brd.+wlan', s_out)
+            print(s_out)
+            m = re.search('inet (\d+\.\d+\.\d+\.\d+)\/2', s_out)
             if m:
                 wlan_ip = m.group(1)
                 print(wlan_ip)
