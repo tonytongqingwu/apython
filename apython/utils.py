@@ -159,9 +159,12 @@ def get_transmitter_info():
     transmitter_id = pair_code = 0
     address = ''
     prod_type = 'G7'
-    r_code, s_out, s_err = run_command('docker logs $(docker ps -aqf "name=^jarvis") --since=6m')
+    r_code, s_out, s_err = run_command('docker logs jarvis_local --since=6m')
+    r_code2, s_out2, s_err2 = run_command('docker logs jarvis_server --since=6m')
 
-    if r_code == 0:
+    if r_code == 0 or r_code2 == 0:
+        if r_code != 0:
+            s_out = s_out2
         print('Get all info')
         s_out = s_out.replace(' ', '').strip()
         print(s_out)
@@ -234,3 +237,15 @@ def find_element_has_text_with_bounds(file_name, text):
                 return get_widget_bounds(b)
 
 
+def get_iphone_id():
+    id = ''
+    cmd = "xcrun xctrace list devices"
+    r_code, s_out, s_err = run_command(cmd)
+    s_out = s_out.replace(' ', '').strip()
+    # print(s_out)
+    if r_code == 0:
+        m = re.search('iPhone\(.+\)\((.+)\)', s_out)
+        if m:
+            id = m.group(1)
+
+    return id
