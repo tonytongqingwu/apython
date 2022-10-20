@@ -29,14 +29,17 @@ class AppiumIOS:
         self.common_desired_cap = {
             "udid": self.device_id,
             "automationName": "XCUITest",
-            "wdaLocalPort": self.port_num,
+            # "wdaLocalPort": self.port_num,
             "autoAcceptAlerts": True,
-            "xcodeOrgId": 'P762WHM474',
+            "platformName": "iOS",
+            "deviceName": 'iPhone8',
+            # "xcodeOrgId": 'P762WHM474',
             "xcodeSigningId": 'iPhone Developer',
+            "showIOSLog": True,
             "newCommandTimeout": 600
         }
         try:
-            self.driver = webdriver.Remote("http://localhost:" + self.port_num + "/wd/hub", self.common_desired_cap)
+            self.driver = webdriver.Remote("http://0.0.0.0:" + self.port_num + "/wd/hub", self.common_desired_cap)
         except Exception as e:
             print(e)
             if 'HTTPConnection' in str(e):
@@ -50,6 +53,23 @@ class AppiumIOS:
         })
         print('done init')
 
+    def open_settings(self):
+        setting_icon = WebDriverWait(self.driver, 20).until(
+            EC.element_to_be_clickable((MobileBy.ACCESSIBILITY_ID, "TV"))
+        )
+        setting_icon.click()
+
+        # input_search = WebDriverWait(self.driver, 20).until(
+        #     EC.element_to_be_clickable((MobileBy.ACCESSIBILITY_ID, "Search"))
+        # )
+        # input_search.send_key("Ab")
+
+    def open_app(self, app_name):
+        icon = WebDriverWait(self.driver, 20).until(
+            EC.element_to_be_clickable((MobileBy.ACCESSIBILITY_ID, app_name))
+        )
+        icon.click()
+
     def get_battery_level(self):
         result = self.driver.battery_info
 
@@ -57,21 +77,14 @@ class AppiumIOS:
         # print(out)
         return result
 
+    # only home, volumeUp, volumeDown supported.
     def home(self, times=1):
         for i in range(times):
-            self.driver.keyevent(3)
+            self.driver.press_button('HOME')
             sleep(0.1)
-
-    def back(self, times=1):
-        for i in range(times):
-            self.driver.keyevent(4)
-            sleep(0.1)
-
-    def enter(self):
-        self.driver.keyevent(66)
 
     def get_model(self):
-        m = self.driver.capabilities['deviceModel']
+        m = self.driver.capabilities['deviceName']
         m = m.replace(' ', '')
         return m
 
