@@ -167,7 +167,7 @@ def get_transmitter_info():
             s_out = s_out2
         print('Get all info')
         s_out = s_out.replace(' ', '').strip()
-        print(s_out)
+        # print(s_out)
         m = re.search('pairingCode:(\d+)', s_out)
         o = re.search('address:\"(\d+\.\d+\.\d+\.\d+)\"', s_out)
         n = re.search('transmitterId:\"(\d+)\"', s_out)

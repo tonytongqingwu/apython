@@ -13,6 +13,16 @@ from appium.webdriver.common.touch_action import TouchAction
 from selenium.common.exceptions import NoSuchElementException
 from apython.utils import get_battery_level, get_top_info, remove_appium
 
+CAMERA = 'Camera'
+MAP = 'Maps'
+CHROME = 'Browser'
+G7_APP = 'G7'
+TV = 'TV'
+SETTINGS = 'Settings'
+MEMORY = 'Memory'
+
+APPS = [CAMERA, MAP, CHROME, G7_APP, MEMORY, SETTINGS, TV]
+
 
 class AppiumIOS:
     def __del__(self):
@@ -32,10 +42,12 @@ class AppiumIOS:
             # "wdaLocalPort": self.port_num,
             "autoAcceptAlerts": True,
             "platformName": "iOS",
-            "deviceName": 'iPhone8',
+            "deviceName": 'iPhone',
             # "xcodeOrgId": 'P762WHM474',
             "xcodeSigningId": 'iPhone Developer',
             "showIOSLog": True,
+            "appium:noReset": True,
+            "appium:autoAcceptAlerts": True,
             "newCommandTimeout": 600
         }
         try:
@@ -51,13 +63,17 @@ class AppiumIOS:
         self.driver.update_settings({
             "waitForIdleTimeout": 3000,  # 3 seconds
         })
+        self.touch = TouchAction(self.driver)
         print('done init')
 
     def open_settings(self):
-        setting_icon = WebDriverWait(self.driver, 20).until(
-            EC.element_to_be_clickable((MobileBy.ACCESSIBILITY_ID, "TV"))
-        )
-        setting_icon.click()
+        try:
+            setting_icon = WebDriverWait(self.driver, 20).until(
+                EC.element_to_be_clickable((MobileBy.ACCESSIBILITY_ID, "TV"))
+            )
+            setting_icon.click()
+        except Exception as e:
+            print('open setting failed')
 
         # input_search = WebDriverWait(self.driver, 20).until(
         #     EC.element_to_be_clickable((MobileBy.ACCESSIBILITY_ID, "Search"))
@@ -65,10 +81,42 @@ class AppiumIOS:
         # input_search.send_key("Ab")
 
     def open_app(self, app_name):
-        icon = WebDriverWait(self.driver, 20).until(
-            EC.element_to_be_clickable((MobileBy.ACCESSIBILITY_ID, app_name))
-        )
-        icon.click()
+        self.home()
+        sleep(2)
+        self.click_text(app_name)
+        print('Open app {}'.format(app_name))
+
+    def run_app(self, app_name):
+        self.open_app(app_name)
+        if app_name == SETTINGS:
+            self.enter_text('Search', 'About')
+            # try:
+            #     self.driver.find_element(by=MobileBy.ACCESSIBILITY_ID, value='Search').send_keys('About')
+            # except Exception as e:
+            #     print('Search about failed: {}'.format(str(e)))
+
+            self.click_text('Cancel')
+        elif app_name == TV:
+            self.enter_text('Shows, Movies, and More', 'free')
+            self.click_text('free tv shows')
+            self.click_text('See TV Show')
+            self.click_text('Play free Episode')
+
+    def enter_text(self, text_field_name, text):
+        try:
+            self.driver.find_element(by=MobileBy.ACCESSIBILITY_ID, value=text_field_name).send_keys(text)
+        except Exception as e:
+            print('Enter text failed: {}'.format(str(e)))
+
+    def click_text(self, text):
+        try:
+            icon = WebDriverWait(self.driver, 20).until(
+                EC.element_to_be_clickable((MobileBy.ACCESSIBILITY_ID, text))
+            )
+            icon.click()
+            print('Click text {}'.format(text))
+        except Exception as e:
+            print('Can not click text {} due to {}'.format(text, str(e)))
 
     def get_battery_level(self):
         result = self.driver.battery_info
@@ -100,7 +148,7 @@ class AppiumIOS:
     def appium_touch_move_down(self):
         try:
             touch = TouchAction(self.driver)
-            touch.long_press(x=500, y=550).move_to(x=500, y=1300).release().perform()
+            touch.long_press(x=500, y=550).move_to(x=500, y=1800).release().perform()
             sleep(3)
         except Exception as e:
             print(e)
