@@ -48,7 +48,7 @@ if __name__ == '__main__':
 
         app_d.run_app(G7_APP)
         record_apps(app_log, G7_APP)
-"""
+
         now = datetime.now()
         if 0 < now.hour < 24:  # We can always make alert not sound by settings, so run 24 hours now.
             if pause_time is None:
@@ -118,4 +118,4 @@ if __name__ == '__main__':
 
             print('Click ack OK button if any other alert')
             app_d.g7_click_ok_alert_ack()
-            """
+

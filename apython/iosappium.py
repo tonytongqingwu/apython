@@ -4,6 +4,7 @@ import datetime
 import base64
 import re
 import time
+from word2number import w2n
 from time import sleep
 from appium import webdriver
 from appium.webdriver.common.mobileby import MobileBy
@@ -15,13 +16,13 @@ from apython.utils import get_battery_level, get_top_info, remove_appium
 
 CAMERA = 'Camera'
 MAP = 'Maps'
-CHROME = 'Browser'
-G7_APP = 'G7'
+CHROME = 'Safari'
+G7_APP = 'Dexcom G7'
 TV = 'TV'
 SETTINGS = 'Settings'
-MEMORY = 'Memory'
 
-APPS = [CAMERA, MAP, CHROME, G7_APP, MEMORY, SETTINGS, TV]
+APPS = [CAMERA, MAP, CHROME, G7_APP, SETTINGS, TV]
+SCROLL_DUR_MS = 3000
 
 
 class AppiumIOS:
@@ -65,22 +66,22 @@ class AppiumIOS:
         })
         self.touch = TouchAction(self.driver)
         print('done init')
-
-    def open_settings(self):
-        try:
-            setting_icon = WebDriverWait(self.driver, 20).until(
-                EC.element_to_be_clickable((MobileBy.ACCESSIBILITY_ID, "TV"))
-            )
-            setting_icon.click()
-        except Exception as e:
-            print('open setting failed')
-
-        # input_search = WebDriverWait(self.driver, 20).until(
-        #     EC.element_to_be_clickable((MobileBy.ACCESSIBILITY_ID, "Search"))
-        # )
-        # input_search.send_key("Ab")
+        window_size = self.driver.get_window_size()
+        print(window_size)
+        self.scroll_y_top1 = window_size['height'] * 0.1
+        self.scroll_y_top = window_size['height'] * 0.2
+        self.scroll_y_bottom = window_size['height'] * 0.8
+        self.scroll_y_middle = window_size['height'] * 0.5
+        self.scroll_y_top2 = window_size['height'] * 0.25
+        self.scroll_x = window_size['width'] * 0.5
+        self.scroll_x1 = window_size['width'] * 0.1
 
     def open_app(self, app_name):
+        self.home()
+        self.touch.tap(None, self.scroll_x, self.scroll_y_top).perform()
+        self.click_text('Close Picture in Picture')
+        self.click_text('NotificationShortLookView')
+        self.g7_click_ok_alert_ack()
         self.home()
         sleep(2)
         self.click_text(app_name)
@@ -89,18 +90,45 @@ class AppiumIOS:
     def run_app(self, app_name):
         self.open_app(app_name)
         if app_name == SETTINGS:
-            self.enter_text('Search', 'About')
-            # try:
-            #     self.driver.find_element(by=MobileBy.ACCESSIBILITY_ID, value='Search').send_keys('About')
-            # except Exception as e:
-            #     print('Search about failed: {}'.format(str(e)))
-
-            self.click_text('Cancel')
+            self.appium_touch_move_up()
+            self.appium_touch_move_up()
+            self.appium_touch_move_down()
+            self.appium_touch_move_down()
         elif app_name == TV:
+            self.enter_text('Search', 'free')
+            self.click_text('Cancel')
+            self.enter_text('Search', 'free')
             self.enter_text('Shows, Movies, and More', 'free')
             self.click_text('free tv shows')
-            self.click_text('See TV Show')
+            sleep(3)
+            self.touch.tap(None, self.scroll_x, self.scroll_y_top2).perform()
+            self.click_text('Resume Episode')
             self.click_text('Play free Episode')
+            sleep(10)
+        elif app_name == G7_APP:
+            self.touch.tap(None, self.scroll_x1, self.scroll_y_top1).perform()
+            self.click_text('Glucose')
+        elif app_name == CHROME:
+            self.enter_text('Address', 'www.Dexcom.com')
+            self.appium_touch_move_up()
+            self.appium_touch_move_up()
+            self.appium_touch_move_down()
+            self.appium_touch_move_down()
+            self.enter_text('Address', 'www.google.com')
+            self.appium_touch_move_up()
+            self.appium_touch_move_up()
+            self.appium_touch_move_down()
+            self.appium_touch_move_down()
+        elif app_name == CAMERA:
+            print('CAM')
+            for i in range(3):
+                self.click_text('PhotoCapture')
+        elif app_name == MAP:
+            print('MAP')
+            self.appium_touch_move_up()
+            self.appium_touch_move_up()
+            self.appium_touch_move_down()
+            self.appium_touch_move_down()
 
     def enter_text(self, text_field_name, text):
         try:
@@ -108,9 +136,9 @@ class AppiumIOS:
         except Exception as e:
             print('Enter text failed: {}'.format(str(e)))
 
-    def click_text(self, text):
+    def click_text(self, text, wait=10):
         try:
-            icon = WebDriverWait(self.driver, 20).until(
+            icon = WebDriverWait(self.driver, wait).until(
                 EC.element_to_be_clickable((MobileBy.ACCESSIBILITY_ID, text))
             )
             icon.click()
@@ -143,16 +171,7 @@ class AppiumIOS:
         :return: /Users/tt0622/screen_test_xxx_2022-021359.png
         """
         f_name = '{}_{}_{}.png'.format(name, self.adb_id, time.strftime("%Y%m%d-%H%M%S"))
-        self.driver.save_screenshot(f_name)
-
-    def appium_touch_move_down(self):
-        try:
-            touch = TouchAction(self.driver)
-            touch.long_press(x=500, y=550).move_to(x=500, y=1800).release().perform()
-            sleep(3)
-        except Exception as e:
-            print(e)
-            print("Unable to scroll down")
+        self.driver.get_screenshot_as_file(f_name)
 
     def g7_login_later(self):
         try:
@@ -205,24 +224,17 @@ class AppiumIOS:
     def get_egv(self):
         egv = ''
         try:
-            egv = self.driver.find_element_by_id('com.dexcom.g7:id/id_glucose_compass_egv').text
+            egv = self.driver.find_element_by_accessibility_id('id_glucose_compass').text
         except NoSuchElementException as e:
             print('No EGV ' + str(e))
         finally:
+            print('EGV is {}'.format(egv))
+            m = re.search('You\'re (.+) milligrams', egv)
+            if m:
+                word = m.group(1).replace('-', ' ')
+                egv = w2n.word_to_num(word)
+                print(egv)
             return egv
-
-    def verify_and_ack_alert(self):
-        ok = None
-        try:
-            ok = self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_acknowledge_button')
-        except NoSuchElementException as e:
-            print('No Alert ok' + str(e))
-        finally:
-            if ok:
-                ok.click()
-                return True
-            else:
-                return False
 
     def g7_verify_signal_loss_message(self):
         """
@@ -231,30 +243,22 @@ class AppiumIOS:
         """
         lost_help = lost_title = None
         try:
-            lost_help = self.driver.find_element_by_id('com.dexcom.g7:id/id_glucose_state_card_help_button')
+            lost_help = self.driver.find_elements_by_ios_predicate('id_glucose_state_card_help_button')
         except NoSuchElementException as e:
             print('Get lost_help button failed ' + str(e))
 
         try:
-            lost_title = self.driver.find_element_by_id('com.dexcom.g7:id/id_glucose_state_card_title_label')
+            lost_title = self.driver.find_elements_by_ios_predicate('id_glucose_state_card_title_label')
         except NoSuchElementException as e:
             print('Get lost_title  failed ' + str(e))
 
-        if lost_help and lost_title and lost_title.text == 'Signal Loss':
+        if lost_help is not None and lost_title is not None:
             return True
         else:
             return False
 
     def g7_click_ok_alert_ack(self):
-        try:
-            self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_acknowledge_button').click()
-        except Exception as e:
-            print('Clike ack alert failed ' + str(e))
-
-        try:
-            self.driver.find_element_by_id('com.dexcom.g7:id/snackbar_action').click()
-        except Exception as e:
-            print('Click bar failed ' + str(e))
+        self.click_text('OK')
 
     def g7_verify_signal_loss_alert(self):
         """
@@ -263,33 +267,21 @@ class AppiumIOS:
         """
         lost_ok = lost_title = None
         try:
-            lost_ok = self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_acknowledge_button')
+            lost_ok = self.driver.find_elements_by_ios_predicate('id_alert_acknowledge_button')
         except NoSuchElementException as e:
             print('Get lost_ok button failed ' + str(e))
 
-        try:
-            lost_title = self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_title_label')
-        except NoSuchElementException as e:
-            print('Get lost_title  failed ' + str(e))
-
-        if lost_ok and lost_title and lost_title.text == 'Signal Loss':
+        if lost_ok is not None:
             return True
-        else:
-            return False
-
-    def appium_tap_title_contains(self, text):
-        titles = self.driver.find_elements_by_id('android:id/title')
-        for t in titles:
-            if text in t.text:
-                t.click()
-                sleep(2)
-                break
 
     def appium_touch_move_up(self):
-        try:
-            touch = TouchAction(self.driver)
-            touch.long_press(x=500, y=1300).move_to(x=500, y=550).release().perform()
-            sleep(3)
-        except Exception as e:
-            print(e)
-            print("Unable to scroll up")
+        self._y_scroll(self.scroll_y_top, self.scroll_y_bottom)
+
+    def appium_touch_move_down(self):
+        self._y_scroll(self.scroll_y_bottom, self.scroll_y_top)
+
+    def _y_scroll(self, y_start, y_end):
+        actions = TouchAction(self.driver)
+        actions.long_press(None, self.scroll_x, y_start, SCROLL_DUR_MS)
+        actions.move_to(None, self.scroll_x, y_end)
+        actions.perform()
