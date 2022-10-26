@@ -13,7 +13,8 @@ ua.select_text('Confirm your email to test Dex')
 ua.dump_screen('gmail')
 
 file_name = id_adb + '_gmail.xml'
-start_x, start_y, end_x, end_y = find_element_has_text_with_bounds(file_name, 'Search release')
+start_x, start_y, end_x, end_y = find_element_has_text_with_bounds(file_name, 'Confirm')
+#start_x, start_y, end_x, end_y = find_element_has_text_with_bounds(file_name, 'Search release')
 print(start_x, start_y, end_x, end_y)
 m_x = (end_x - start_x) / 2
 m_y = (end_y - start_y) / 2

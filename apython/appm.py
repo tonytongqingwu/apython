@@ -180,19 +180,19 @@ class AppiumDevice:
         except Exception as e:
             print('Different login failed ' + str(e))
 
-    def get_egv(self):
+    def get_egv(self, app='g7'):
         egv = ''
         try:
-            egv = self.driver.find_element_by_id('com.dexcom.g7:id/id_glucose_compass_egv').text
+            egv = self.driver.find_element_by_id('com.dexcom.{}:id/id_glucose_compass_egv'.format(app)).text
         except NoSuchElementException as e:
             print('No EGV ' + str(e))
         finally:
             return egv
 
-    def verify_and_ack_alert(self):
+    def verify_and_ack_alert(self, app='g7'):
         ok = None
         try:
-            ok = self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_acknowledge_button')
+            ok = self.driver.find_element_by_id('com.dexcom.{}:id/id_alert_acknowledge_button'.format(app))
         except NoSuchElementException as e:
             print('No Alert ok' + str(e))
         finally:
@@ -202,19 +202,19 @@ class AppiumDevice:
             else:
                 return False
 
-    def g7_verify_signal_loss_message(self):
+    def g7_verify_signal_loss_message(self, app='g7'):
         """
         Verify signal loss after 10 minutes with message
         :return:
         """
         lost_help = lost_title = None
         try:
-            lost_help = self.driver.find_element_by_id('com.dexcom.g7:id/id_glucose_state_card_help_button')
+            lost_help = self.driver.find_element_by_id('com.dexcom.{}:id/id_glucose_state_card_help_button'.format(app))
         except NoSuchElementException as e:
             print('Get lost_help button failed ' + str(e))
 
         try:
-            lost_title = self.driver.find_element_by_id('com.dexcom.g7:id/id_glucose_state_card_title_label')
+            lost_title = self.driver.find_element_by_id('com.dexcom.{}:id/id_glucose_state_card_title_label'.format(app))
         except NoSuchElementException as e:
             print('Get lost_title  failed ' + str(e))
 
@@ -234,19 +234,19 @@ class AppiumDevice:
         except Exception as e:
             print('Click bar failed ' + str(e))
 
-    def g7_verify_signal_loss_alert(self):
+    def g7_verify_signal_loss_alert(self, app='g7'):
         """
         Verify signal loss after 20 minutes with message
         :return:
         """
         lost_ok = lost_title = None
         try:
-            lost_ok = self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_acknowledge_button')
+            lost_ok = self.driver.find_element_by_id('com.dexcom.{}:id/id_alert_acknowledge_button'.format(app))
         except NoSuchElementException as e:
             print('Get lost_ok button failed ' + str(e))
 
         try:
-            lost_title = self.driver.find_element_by_id('com.dexcom.g7:id/id_alert_title_label')
+            lost_title = self.driver.find_element_by_id('com.dexcom.{}:id/id_alert_title_label'.format(app))
         except NoSuchElementException as e:
             print('Get lost_title  failed ' + str(e))
 

@@ -20,6 +20,7 @@ CHROME = 'Safari'
 G7_APP = 'Dexcom G7'
 TV = 'TV'
 SETTINGS = 'Settings'
+G1_APP = 'Dexcom G1'
 
 APPS = [CAMERA, MAP, CHROME, G7_APP, SETTINGS, TV]
 SCROLL_DUR_MS = 3000
@@ -49,6 +50,7 @@ class AppiumIOS:
             "showIOSLog": True,
             "appium:noReset": True,
             "appium:autoAcceptAlerts": True,
+            "appium:app": "com.dexcominc.G7",
             "newCommandTimeout": 600
         }
         try:
@@ -106,8 +108,11 @@ class AppiumIOS:
             self.click_text('Play free Episode')
             sleep(10)
         elif app_name == G7_APP:
-            self.touch.tap(None, self.scroll_x1, self.scroll_y_top1).perform()
+            # no need put in home screen
+            # self.touch.tap(None, self.scroll_x1, self.scroll_y_top1).perform()
+            self.driver.activate_app("com.dexcominc.G7")
             self.click_text('Glucose')
+
         elif app_name == CHROME:
             self.enter_text('Address', 'www.Dexcom.com')
             self.appium_touch_move_up()

@@ -155,6 +155,84 @@ def remove_appium(id_adb):
     sleep(2)
 
 
+def get_egv_from_log(cmd='tail -100  {}/jarvis/localLogFile.txt'.format(os.getenv('HOME'))):
+    egv = 0
+    r_code, s_out, s_err = run_command(cmd)
+
+    if r_code == 0:
+        print('Get all info')
+        s_out = s_out.replace(' ', '').strip()
+        print('-----------------')
+        print(s_out)
+        print('-----------------')
+        o = re.search('egv:(\d+)', s_out)
+
+        if o:
+            egv = int(o.group(1))
+        else:
+            print('No egv')
+    else:
+        print(s_err)
+        print('Get no info')
+
+    print('egv >{}<'.format(egv))
+
+    return egv
+
+
+def get_transmitter_info_d1_pake(cmd1='docker logs jarvis_local --since=10m',
+                                 cmd2='tail -100  {}/jarvis/localLogFile.txt'.format(os.getenv('HOME'))):
+    """
+
+    :param cmd1: 'docker logs jarvis_local --since=10m'
+    :param cmd2: 'tail -100  ~/jarvis/localLogFile.txt'
+    :return:
+    """
+    transmitter_id = ''
+    address = ''
+    prod_type = 'D1PAKE'
+    r_code, s_out, s_err = run_command(cmd1)
+    r_code2, s_out2, s_err2 = run_command(cmd2)
+
+    if r_code == 0 or r_code2 == 0:
+        if r_code != 0:
+            s_out = s_out2
+        print('Get all info')
+        s_out = s_out.replace(' ', '').strip()
+        print('-----------------')
+        # print(s_out)
+        print('-----------------')
+        # transmitter:CL7P7M@10.6.208.111
+        o = re.search('ddress:"(\d+\.\d+\.\d+\.\d+)"', s_out)
+        n = re.search('transmitterId:\"(\S+)\"', s_out)
+
+        # m = re.search('transmitter:(.+)@(\d+\.\d+\.\d+\.\d+)', s_out)  # works also
+        # if m:
+        #     print('Found info')
+        #     address = m.group(2)
+        #     transmitter_id = m.group(1)
+        # else:
+        #     print('!!!!!!!!!!!!!no info')
+        if o:
+            address = o.group(1)
+        else:
+            print('No pattern for address')
+
+        if n:
+            transmitter_id = n.group(1)
+        else:
+            print('No pattern for id')
+    else:
+        print(s_err)
+        print('Get no info')
+
+    print('transmitterid >{}<'.format(transmitter_id))
+    print('address >{}<'.format(address))
+    print('type >{}<'.format(prod_type))
+
+    return prod_type, address, transmitter_id
+
+
 def get_transmitter_info():
     transmitter_id = pair_code = 0
     address = ''
