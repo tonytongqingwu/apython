@@ -5,7 +5,7 @@ from datetime import datetime
 from apython.utils import get_wip_id, create_log_path, remove_appium
 from apython.apps.app import *
 from apython.grpc.d1pake import D1Pake
-from apython.utils import get_transmitter_info_d1_pake, log_info, record_apps, logcat
+from apython.utils import get_transmitter_info_d1_pake, log_info, record_apps, logcat, get_id
 
 
 G1_NAME = 'dexcomone'
@@ -13,15 +13,15 @@ G1_NAME = 'dexcomone'
 if __name__ == '__main__':
     os.system('bash ./kill_ps.sh')
     # start top, battery check, create wip,
-    os.system('bash ./top_battery_check.sh')
+    os.system('bash ./top_battery_check_g1.sh')
     sleep(30)
     # power should cut already, so use wi-fi for appium
     # get wip
-    id_adb = get_wip_id()
+    id_adb = get_id()
     print('wip is:')
     print(id_adb)
     if id_adb == '' or id_adb is None:
-        print('No wifi is setup , exit !!!')
+        print('No id , exit !!!')
         os.system('bash ./kill_ps.sh')
         exit(1)
 
