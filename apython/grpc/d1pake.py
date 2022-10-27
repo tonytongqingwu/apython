@@ -10,7 +10,7 @@ class D1Pake:
         self.client = Client.get_by_endpoint("localhost:44444")
         self.state = dict()
         self.state['transmitterId'] = transmitter_id
-        self.state['commInterval'] = 6
+        # self.state['commInterval'] = 6
 
         self.request = dict()
         self.request['address'] = address
@@ -28,9 +28,12 @@ class D1Pake:
         result = self.client.request(SERVICE, "GetCommunicatedEGV", self.egv_request)
         print(type(result))
         print('Result from API {}'.format(result))
+        egvs = result['communicatedEGV']
+        last_egv = egvs[-1]
+        return last_egv['egv']
 
-        result = get_egv_from_log()
-        return result
+        # result = get_egv_from_log()
+        # return result
 
     def get_state(self):
         """
@@ -52,11 +55,11 @@ class D1Pake:
         :return:
         """
         states = [0, 1, 2]
+        # states = ['START_ADVERTISING', 'STOP_ADVERTISING', 'PAUSE_ADVERTISING']
         if state_string not in states:
             print('!!!!!!!!!!! Invalid state')
         else:
             self.state['advertisingState'] = state_string
-            # self.state['advertisingState'] = 1
             self.request['transmitterSimulatorState'] = self.state
             # D1 has upper case SaveT
             result = self.client.request(SERVICE, "SaveTransmitterSimulatorState", self.request)

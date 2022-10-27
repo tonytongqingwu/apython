@@ -163,7 +163,7 @@ def get_egv_from_log(cmd='tail -100  {}/jarvis/localLogFile.txt'.format(os.geten
         print('Get all info')
         s_out = s_out.replace(' ', '').strip()
         print('-----------------')
-        print(s_out)
+        # print(s_out)
         print('-----------------')
         o = re.search('egv:(\d+)', s_out)
 

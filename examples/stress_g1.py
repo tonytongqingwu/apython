@@ -39,7 +39,7 @@ if __name__ == '__main__':
     app_log = log_path + '/apps.log'
     info = log_path + '/info.log'
 
-    prod_type, address, transmitter_id, pair_code = get_transmitter_info_d1_pake()
+    prod_type, address, transmitter_id = get_transmitter_info_d1_pake()
     g = D1Pake(address, transmitter_id)
     pause_time = None
     start_time = None

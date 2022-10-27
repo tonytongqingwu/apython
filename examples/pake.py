@@ -7,8 +7,8 @@ prod_type, address, transmitter_id = get_transmitter_info_d1_pake()
 g = D1Pake(address, transmitter_id)
 egv = g.get_egv()
 print(egv)
-# g.save_state(2)
-# sleep(70)
-# g.save_state(0)
+g.save_state(2)
+sleep(70)
+g.save_state(0)
 
 
