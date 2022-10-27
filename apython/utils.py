@@ -194,8 +194,12 @@ def get_transmitter_info_d1_pake(cmd1='docker logs jarvis_local --since=10m',
     r_code, s_out, s_err = run_command(cmd1)
     r_code2, s_out2, s_err2 = run_command(cmd2)
 
+    print('docker command return code: {}'.format(r_code))
+    print('tail command return code: {}'.format(r_code2))
+
     if r_code == 0 or r_code2 == 0:
         if r_code != 0:
+            print('no jarvis_local, use txt file')
             s_out = s_out2
         print('Get all info')
         s_out = s_out.replace(' ', '').strip()

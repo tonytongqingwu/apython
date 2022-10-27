@@ -10,9 +10,11 @@ from apython.utils import get_transmitter_info, log_info, record_apps, logcat
 
 if __name__ == '__main__':
     app_d = AppiumApps('014AY1RRR3')
+    m_egv = app_d.get_egv(app='dexcomone')
+    print(m_egv)
     # app_d.verify_and_ack_alert('dexcomone')
-    if app_d.g7_verify_signal_loss_message('dexcomone'):
-        print('has message')
+    # if app_d.g7_verify_signal_loss_message('dexcomone'):
+    #     print('has message')
 
     # if app_d.g7_verify_signal_loss_alert():
     #     app_d.g7_click_ok_alert_ack()

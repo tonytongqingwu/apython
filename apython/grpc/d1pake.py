@@ -10,11 +10,13 @@ class D1Pake:
         self.client = Client.get_by_endpoint("localhost:44444")
         self.state = dict()
         self.state['transmitterId'] = transmitter_id
-        # self.state['commInterval'] = 6
+        self.state['commInterval'] = 0
+        self.state["supportedType"] = "DEXCOM_ONE_2019"
 
         self.request = dict()
         self.request['address'] = address
-        self.request['caller'] = 2
+        # self.request['caller'] = 2
+        self.request['caller'] = "CLIENT"
 
         self.egv_request = dict()
         self.egv_request['address'] = address
@@ -28,12 +30,12 @@ class D1Pake:
         result = self.client.request(SERVICE, "GetCommunicatedEGV", self.egv_request)
         print(type(result))
         print('Result from API {}'.format(result))
-        egvs = result['communicatedEGV']
-        last_egv = egvs[-1]
-        return last_egv['egv']
+        # egvs = result['communicatedEGV']
+        # last_egv = egvs[-1]
+        # return last_egv['egv']
 
-        # result = get_egv_from_log()
-        # return result
+        result = get_egv_from_log()
+        return result
 
     def get_state(self):
         """
@@ -54,8 +56,8 @@ class D1Pake:
         :param state_string:
         :return:
         """
-        states = [0, 1, 2]
-        # states = ['START_ADVERTISING', 'STOP_ADVERTISING', 'PAUSE_ADVERTISING']
+        # states = [0, 1, 2]
+        states = ['START_ADVERTISING', 'STOP_ADVERTISING', 'PAUSE_ADVERTISING']
         if state_string not in states:
             print('!!!!!!!!!!! Invalid state')
         else:
