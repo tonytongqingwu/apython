@@ -174,7 +174,7 @@ class AppiumIOS:
         :param name: full path name, ex. /Users/tt0622/screen_test
         :return: /Users/tt0622/screen_test_xxx_2022-021359.png
         """
-        f_name = '{}_{}_{}.png'.format(name, self.adb_id, time.strftime("%Y%m%d-%H%M%S"))
+        f_name = '{}_{}_{}.png'.format(name, self.device_id, time.strftime("%Y%m%d-%H%M%S"))
         self.driver.get_screenshot_as_file(f_name)
 
     def g7_login_later(self):

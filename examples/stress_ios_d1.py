@@ -1,11 +1,8 @@
 import random
-import os
-from time import sleep
-from datetime import datetime
-from apython.utils import get_iphone_id, create_log_path
 from apython.iosappium import *
 from apython.grpc.gclient import GrpcClient
-from apython.utils import get_transmitter_info, log_info, record_apps, logcat
+from apython.utils import get_transmitter_info, log_info, record_apps, get_iphone_id, create_log_path
+from datetime import datetime
 
 
 if __name__ == '__main__':
@@ -76,7 +73,7 @@ if __name__ == '__main__':
 
         msg = '{} Check G7'.format(datetime.now())
         log_info(info, msg)
-        logcat(log_path, ios_id)
+
         if app_d.g7_verify_signal_loss_alert():
             print("\033[91mSignal lost alert !!!\033[0m")
             msg = '{} Signal lost alert'.format(datetime.now())
