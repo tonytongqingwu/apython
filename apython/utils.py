@@ -324,9 +324,9 @@ def get_iphone_id():
     cmd = "xcrun xctrace list devices"
     r_code, s_out, s_err = run_command(cmd)
     s_out = s_out.replace(' ', '').strip()
-    # print(s_out)
+    print(s_out)
     if r_code == 0:
-        m = re.search('iPhone\(.+\)\((.+)\)', s_out)
+        m = re.search('iPhone\d+\(.+\)\((.+)\)', s_out)
         if m:
             id = m.group(1)
 

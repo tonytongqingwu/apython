@@ -2,45 +2,29 @@ import random
 import os
 from time import sleep
 from datetime import datetime
-from apython.utils import get_wip_id, create_log_path, remove_appium
-from apython.apps.app import *
-from apython.grpc.d1pake import D1Pake
-from apython.utils import get_transmitter_info_d1_pake, log_info, record_apps, logcat, get_id
+from apython.utils import get_iphone_id, create_log_path
+from apython.iosappium import *
+from apython.grpc.gclient import GrpcClient
+from apython.utils import get_transmitter_info, log_info, record_apps, logcat
 
-
-G1_NAME = 'dexcomone'
 
 if __name__ == '__main__':
-    os.system('bash ./kill_ps.sh')
-    # start top, battery check, create wip,
-    os.system('bash ./top_battery_check_g1.sh')
-    sleep(30)
-    # power should cut already, so use wi-fi for appium
-    # get wip
-    id_adb = get_id()
-    print('wip is:')
-    print(id_adb)
-    if id_adb == '' or id_adb is None:
-        print('No id , exit !!!')
-        os.system('bash ./kill_ps.sh')
-        exit(1)
-
-    remove_appium(id_adb)
-
-    os.system('bash appium_start.sh')
-    sleep(20)
-
-    app_d = AppiumApps(id_adb)
+    ios_id = get_iphone_id()
+    print(ios_id)
+    app_d = AppiumIOS(ios_id, dexcom_app_type=G1_APP)
+    print(app_d.driver.capabilities['deviceName'])
+    print('battery')
+    print(app_d.get_battery_level())
 
     model = app_d.get_model()
-    log_path = create_log_path(model, id_adb)
+    log_path = create_log_path(model, ios_id)
     print('log path {}'.format(log_path))
 
     app_log = log_path + '/apps.log'
     info = log_path + '/info.log'
 
-    prod_type, address, transmitter_id = get_transmitter_info_d1_pake()
-    g = D1Pake(address, transmitter_id)
+    prod_type, address, transmitter_id, pair_code = get_transmitter_info()
+    g = GrpcClient(address, pair_code, transmitter_id)
     pause_time = None
     start_time = None
     pause_count = 0
@@ -48,8 +32,8 @@ if __name__ == '__main__':
     APPS = list(map(lambda x: x.replace(G7_APP, G1_APP), APPS))
     print(APPS)
     while True:
-        app_d.run_app(MUSIC)  # always run music
-        record_apps(app_log, MUSIC)
+        app_d.run_app(TV)  # always run music
+        record_apps(app_log, TV)
 
         # can create own sequence of apps
         for app in APPS:
@@ -61,8 +45,8 @@ if __name__ == '__main__':
         app_d.run_app(app)
         record_apps(app_log, app)
 
-        app_d.run_app(MUSIC)  # always run music
-        record_apps(app_log, MUSIC)
+        app_d.run_app(TV)  # always run music
+        record_apps(app_log, TV)
 
         app_d.run_app(G1_APP)
         record_apps(app_log, G1_APP)
@@ -76,12 +60,12 @@ if __name__ == '__main__':
                     msg = '{} - Pause {} times'.format(pause_time, pause_count)
                     print(msg)
                     log_info(info, msg)
-                    g.save_state(2)
+                    g.save_state('PAUSE_ADVERTISING')
                     start_time = None
             else:
                 print('has pause time already')
                 if start_time is None and (now - pause_time).total_seconds() > 3000:
-                    g.save_state(0)
+                    g.save_state('START_ADVERTISING')
                     start_time = now
                     msg = '{} - Start {} times'.format(start_time, pause_count)
                     print(msg)
@@ -90,10 +74,10 @@ if __name__ == '__main__':
         else:
             print('Sleep time, make sure uncheck automatic mode on DrStrange.')
 
-        msg = '{} Check G1'.format(datetime.now())
+        msg = '{} Check G7'.format(datetime.now())
         log_info(info, msg)
-        logcat(log_path, id_adb)
-        if app_d.g7_verify_signal_loss_alert(app=G1_NAME):
+        logcat(log_path, ios_id)
+        if app_d.g7_verify_signal_loss_alert():
             print("\033[91mSignal lost alert !!!\033[0m")
             msg = '{} Signal lost alert'.format(datetime.now())
             log_info(info, msg)
@@ -106,7 +90,7 @@ if __name__ == '__main__':
                 log_info(info, '{} Fail: Signal is not recovered on alert'.format(datetime.now()))
             app_d.save_screen('{}/signal_loss_alert'.format(log_path))
             app_d.g7_click_ok_alert_ack()
-        elif app_d.g7_verify_signal_loss_message(app=G1_NAME):
+        elif app_d.g7_verify_signal_loss_message():
             # over 16 minute
             if pause_time is not None and (now - pause_time).total_seconds() > 1100:
                 print('Fail: Signal Lost Message is too late')
@@ -120,7 +104,7 @@ if __name__ == '__main__':
         else:
             egv = g.get_egv()
             print(egv)
-            m_egv = app_d.get_egv(app=G1_NAME)
+            m_egv = app_d.get_egv()
             print(m_egv)
 
             if str(egv) == m_egv:
@@ -131,8 +115,9 @@ if __name__ == '__main__':
                 log_info(info, msg)
 
             if m_egv == '':
-                print('Fail: G1 app has no EGV !!!')
+                print('Fail: G7 app has no EGV !!!')
                 app_d.save_screen('{}/no_egv'.format(log_path))
 
             print('Click ack OK button if any other alert')
             app_d.g7_click_ok_alert_ack()
+

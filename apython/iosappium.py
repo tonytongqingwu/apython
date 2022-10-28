@@ -17,10 +17,10 @@ from apython.utils import get_battery_level, get_top_info, remove_appium
 CAMERA = 'Camera'
 MAP = 'Maps'
 CHROME = 'Safari'
-G7_APP = 'Dexcom G7'
+G7_APP = 'G7'
 TV = 'TV'
 SETTINGS = 'Settings'
-G1_APP = 'Dexcom G1'
+G1_APP = 'DexcomOne'
 
 APPS = [CAMERA, MAP, CHROME, G7_APP, SETTINGS, TV]
 SCROLL_DUR_MS = 3000
@@ -33,7 +33,7 @@ class AppiumIOS:
         except Exception as e:
             print(e)
 
-    def __init__(self, device_id, port_num='4723', dexcom_app_type='G7'):
+    def __init__(self, device_id, port_num='4723', dexcom_app_type=G7_APP):
         self.device_id = device_id
         self.port_num = port_num
         self.dexcom_app_type = dexcom_app_type
@@ -50,7 +50,7 @@ class AppiumIOS:
             "showIOSLog": True,
             "appium:noReset": True,
             "appium:autoAcceptAlerts": True,
-            "appium:app": "com.dexcominc.G7",
+            "appium:app": "com.dexcominc.{}".format(dexcom_app_type),
             "newCommandTimeout": 600
         }
         try:
@@ -107,12 +107,11 @@ class AppiumIOS:
             self.click_text('Resume Episode')
             self.click_text('Play free Episode')
             sleep(10)
-        elif app_name == G7_APP:
+        elif app_name == G7_APP or app_name == G1_APP:
             # no need put in home screen
             # self.touch.tap(None, self.scroll_x1, self.scroll_y_top1).perform()
-            self.driver.activate_app("com.dexcominc.G7")
+            self.driver.activate_app("com.dexcominc.{}".format(app_name))
             self.click_text('Glucose')
-
         elif app_name == CHROME:
             self.enter_text('Address', 'www.Dexcom.com')
             self.appium_touch_move_up()
@@ -202,29 +201,30 @@ class AppiumIOS:
         except Exception as e:
             print('Login failed ' + str(e))
 
-    def g7_login(self, user_nm, pass_wd):
+    def d1_login(self, user_nm, pass_wd):
         try:
-            self.driver.find_element_by_id('com.dexcom.g7:id/id_login_button').click()
-            sleep(30)
-            username = self.driver.find_element_by_xpath("//android.widget.EditText[@resource-id='username']")
-            username.click()
-            username.send_keys(user_nm)
-            # self.driver.keyevent(61)
-            passwd = self.driver.find_element_by_xpath("//android.widget.EditText[@resource-id='password']")
-            passwd.send_keys(pass_wd)
-            self.driver.keyevent(66)
-            sleep(60)
-            self.driver.find_element_by_xpath("(//android.widget.CheckBox)[1]").click()
-            self.driver.find_element_by_xpath("(//android.widget.CheckBox)[2]").click()
+            # self.driver.find_element_by_ios_predicate('value == "Username/E-mail address" AND type == "XCUIElementTypeTextField"').send_keys(user_nm)
+            # sleep(2)
+            # self.driver.find_element_by_ios_predicate('label == "Done"').click()
+            # self.driver.find_element_by_ios_predicate('label == "Next"').click()
+            # self.driver.find_element_by_id('value == "Password"').send_keys(pass_wd)
+            # self.driver.find_element_by_ios_class_chain('**/XCUIElementTypeWindow[3]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[3]/XCUIElementTypeOther/XCUIElementTypeOther[1]').send_keys(pass_wd)
+            # self.driver.find_element_by_ios_predicate('label == "Done"').click()
+            # self.driver.find_element_by_ios_predicate('label == "Login"').click()
+            # self.driver.find_element_by_ios_class_chain('**/XCUIElementTypeWebView[`name == "id_legal_webview"`]/XCUIElementTypeWebView/XCUIElementTypeWebView/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther').click()
+            # self.driver.find_element_by_ios_class_chain('**/XCUIElementTypeWebView[`name == "id_legal_webview"`]/XCUIElementTypeWebView/XCUIElementTypeWebView/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[3]/XCUIElementTypeOther').click()
+            self.driver.find_element_by_ios_predicate('label == "Submit"').click()
+            # username.click()
+            # username.send_keys(user_nm)
+            # # self.driver.keyevent(61)
+            # passwd = self.driver.find_element_by_xpath("//android.widget.EditText[@resource-id='password']")
+            # passwd.send_keys(pass_wd)
+            # self.driver.keyevent(66)
+            # sleep(60)
+            # self.driver.find_element_by_xpath("(//android.widget.CheckBox)[1]").click()
+            # self.driver.find_element_by_xpath("(//android.widget.CheckBox)[2]").click()
         except Exception as e:
             print('Login failed ' + str(e))
-
-        try:
-            username = self.driver.find_element_by_id('mat-input-0')
-            username.click()
-            username.send_keys(user_nm)
-        except Exception as e:
-            print('Different login failed ' + str(e))
 
     def get_egv(self):
         egv = ''
