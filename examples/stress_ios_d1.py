@@ -1,7 +1,7 @@
 import random
 from apython.iosappium import *
-from apython.grpc.gclient import GrpcClient
-from apython.utils import get_transmitter_info, log_info, record_apps, get_iphone_id, create_log_path
+from apython.grpc.d1pake import D1Pake
+from apython.utils import get_transmitter_info_d1_pake, log_info, record_apps, get_iphone_id, create_log_path
 from datetime import datetime
 
 
@@ -20,8 +20,8 @@ if __name__ == '__main__':
     app_log = log_path + '/apps.log'
     info = log_path + '/info.log'
 
-    prod_type, address, transmitter_id, pair_code = get_transmitter_info()
-    g = GrpcClient(address, pair_code, transmitter_id)
+    prod_type, address, transmitter_id = get_transmitter_info_d1_pake()
+    g = D1Pake(address, transmitter_id)
     pause_time = None
     start_time = None
     pause_count = 0
