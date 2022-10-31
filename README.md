@@ -10,9 +10,15 @@ adbd, uiauto, appm.
 
 `mkdir ~/Sandbox/ ; cd ~/Sandbox && git clone https://github.com/tonytongqingwu/apython.git`   
 
-NOTE: if you have control USB board, also clone this:
-
+NOTE: if you have control USB board, or need latest jarvis service control:
+- If you do not have G7X repo, run
 `cd ~/Sandbox && git clone https://github.com/dexcom-inc/G7X_Tests.git`
+- Just update, run 
+`cd ~/Sandbox/G7X_Tests && git pull`
+- Update script for utility, run
+`cd ~/Sandbox/G7X_Tests/src/test/resources/gx_utility_scripts && git pull`
+- Start jarvis server:
+`cd ~/Sandbox/G7X_Tests && ./gradlew initialiseRunner`
 
 2. Then just run the setup.py file from that directory,
 
@@ -48,10 +54,7 @@ to update the script - remove USB power support for now.
 5. Now setup G7, pair with DrStange, and ready to run:
 `cd ~/Sandbox/apython/examples ; bash stress_check.sh`
 
-## Since we need Jarvis service to control DrStrange, we need make sure it is running in docker:
-1. Run this to check
-`docker ps | grep jarvis`
-2. If not running, run this:
-`cd ~/jarvis; sh serviceDocker.sh`
+## other examples
+There are other example for different apps, ask tony.wu@dexcom.com
 
 
