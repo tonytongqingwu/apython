@@ -2,6 +2,7 @@ from apython.appm import AppiumDevice
 from apython.apps.map import Map
 from apython.apps.music import Music
 from apython.apps.g7 import G7
+from apython.apps.g1 import G1
 from apython.apps.settings import Settings
 from apython.apps.browser import Chrome
 from apython.apps.memory import MemoryFill
@@ -14,6 +15,7 @@ G7_APP = 'G7'
 MUSIC = 'Music'
 SETTINGS = 'Settings'
 MEMORY = 'Memory'
+G1_APP = 'G1'
 
 APPS = [CAMERA, MAP, CHROME, G7_APP, MEMORY, SETTINGS, MUSIC]
 
@@ -29,6 +31,8 @@ class AppiumApps(AppiumDevice):
             Map.navigate(self)
         elif app == G7_APP:
             G7.launch_g7(self)
+        elif app == G1_APP:
+            G1.launch_g1(self)
         elif app == CAMERA:
             Camera.take_pictures(self)
         elif app == CHROME:

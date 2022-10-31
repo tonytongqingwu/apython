@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='apython',
-    version='0.1.3',
+    version='1.0.1',
     description='An Android Python package',
     url='https://github.com/tonytongqingwu/apython.git',
     author='tonytongqingwu',
@@ -11,6 +11,7 @@ setup(
     packages=find_packages(),
     install_requires=['uiautomator',
                       'Appium-Python-Client==1.1.0',
+                      'word2number',
                       'grpc-requests'
                       ],
 
