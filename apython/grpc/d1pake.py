@@ -29,13 +29,14 @@ class D1Pake:
         """
         result = self.client.request(SERVICE, "GetCommunicatedEGV", self.egv_request)
         print(type(result))
-        print('Result from API {}'.format(result))
-        # egvs = result['communicatedEGV']
-        # last_egv = egvs[-1]
-        # return last_egv['egv']
-
-        result = get_egv_from_log()
-        return result
+        # print('Result from API {}'.format(result))
+        if result:  # not empty
+            egvs = result['communicatedEGV']
+            last_egv = egvs[-1]
+            return last_egv['egv']
+        else:  # use log
+            result = get_egv_from_log()
+            return result
 
     def get_state(self):
         """

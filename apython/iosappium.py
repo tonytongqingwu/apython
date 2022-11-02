@@ -235,8 +235,13 @@ class AppiumIOS:
         finally:
             print('EGV is {}'.format(egv))
             m = re.search('You\'re (.+) milligrams', egv)
+            n = re.search('You\'re (.+) millimoles', egv)
             if m:
                 word = m.group(1).replace('-', ' ')
+                egv = w2n.word_to_num(word)
+                print(egv)
+            if n:
+                word = n.group(1).replace('-', ' ')
                 egv = w2n.word_to_num(word)
                 print(egv)
             return egv

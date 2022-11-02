@@ -5,7 +5,7 @@ from datetime import datetime
 from apython.utils import get_wip_id, create_log_path, remove_appium
 from apython.apps.app import *
 from apython.grpc.gclient import GrpcClient
-from apython.utils import get_transmitter_info, log_info, record_apps, logcat
+from apython.utils import get_transmitter_info, log_info, record_apps, logcat, compare_egv
 
 
 if __name__ == '__main__':
@@ -119,15 +119,12 @@ if __name__ == '__main__':
             m_egv = app_d.get_egv()
             print(m_egv)
 
-            if str(egv) == m_egv:
+            if compare_egv(egv, m_egv):
                 print('Pass: match')
             else:
                 print('Fail: EGV not match: transmitter>{}, {}<mobile'.format(egv, m_egv))
                 msg = '{} Fail: EGV not match: transmitter>{}, {}<mobile'.format(egv, m_egv, datetime.now())
                 log_info(info, msg)
-
-            if m_egv == '':
-                print('Fail: G7 app has no EGV !!!')
                 app_d.save_screen('{}/no_egv'.format(log_path))
 
             print('Click ack OK button if any other alert')

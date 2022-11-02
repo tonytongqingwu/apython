@@ -1,7 +1,8 @@
 import random
 from apython.iosappium import *
 from apython.grpc.d1pake import D1Pake
-from apython.utils import get_transmitter_info_d1_pake, log_info, record_apps, get_iphone_id, create_log_path
+from apython.utils import get_transmitter_info_d1_pake, log_info, record_apps, get_iphone_id, create_log_path, \
+    compare_egv
 from datetime import datetime
 
 
@@ -104,15 +105,12 @@ if __name__ == '__main__':
             m_egv = app_d.get_egv()
             print(m_egv)
 
-            if str(egv) == m_egv:
+            if compare_egv(egv, m_egv):
                 print('Pass: match')
             else:
                 print('Fail: EGV not match: transmitter>{}, {}<mobile'.format(egv, m_egv))
                 msg = '{} Fail: EGV not match: transmitter>{}, {}<mobile'.format(egv, m_egv, datetime.now())
                 log_info(info, msg)
-
-            if m_egv == '':
-                print('Fail: G7 app has no EGV !!!')
                 app_d.save_screen('{}/no_egv'.format(log_path))
 
             print('Click ack OK button if any other alert')

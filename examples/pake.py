@@ -8,7 +8,7 @@ g = D1Pake(address, transmitter_id)
 egv = g.get_egv()
 print(egv)
 g.save_state('PAUSE_ADVERTISING')
-# sleep(70)
-# g.save_state('START_ADVERTISING')
+sleep(70)
+g.save_state('START_ADVERTISING')
 
 

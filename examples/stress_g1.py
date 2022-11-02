@@ -5,7 +5,7 @@ from datetime import datetime
 from apython.utils import get_wip_id, create_log_path, remove_appium
 from apython.apps.app import *
 from apython.grpc.d1pake import D1Pake
-from apython.utils import get_transmitter_info_d1_pake, log_info, record_apps, logcat, get_id
+from apython.utils import get_transmitter_info_d1_pake, log_info, record_apps, logcat, get_id, compare_egv
 
 
 G1_NAME = 'dexcomone'
@@ -123,15 +123,12 @@ if __name__ == '__main__':
             m_egv = app_d.get_egv(app=G1_NAME)
             print(m_egv)
 
-            if str(egv) == m_egv:
+            if compare_egv(egv, m_egv):
                 print('Pass: match')
             else:
                 print('Fail: EGV not match: transmitter>{}, {}<mobile'.format(egv, m_egv))
                 msg = '{} Fail: EGV not match: transmitter>{}, {}<mobile'.format(egv, m_egv, datetime.now())
                 log_info(info, msg)
-
-            if m_egv == '':
-                print('Fail: G1 app has no EGV !!!')
                 app_d.save_screen('{}/no_egv'.format(log_path))
 
             print('Click ack OK button if any other alert')

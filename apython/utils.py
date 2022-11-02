@@ -331,3 +331,51 @@ def get_iphone_id():
             id = m.group(1)
 
     return id
+
+
+def convert_egv_from_mg_dl_to_mmol_l(mg_dl):
+    return mg_dl * 0.0555
+
+
+def compare_egv_in_range(t_egv, m_egv):
+    """
+    unit of mmol , so compare with epsilon, like 0.2
+    :param t_egv: mg_dl value
+    :param m_egv: any str or float
+    :return: True if in range
+    """
+    if abs(convert_egv_from_mg_dl_to_mmol_l(t_egv) - float(m_egv)) < 0.1:
+        print('Pass: match egv for D1G')
+        return True
+    else:
+        return False
+
+
+def compare_egv(t_egv, m_egv):
+    """
+    Compare transmitter egv vs mobile app egv
+    :param t_egv: From transmitter (int mg/dl from jarvis)
+    :param m_egv: From G7 or any app (string from Android, float/int from iOS)
+    :return: True, pass the validation.
+    """
+    if m_egv == '':
+        print('Fail: mobile app has no EGV !!!')
+        return False
+
+    if isinstance(m_egv, str):
+        print('Must be android device ')
+        if str(t_egv) == m_egv:
+            print('Pass: match egv for G7')
+            return True
+        else:
+            return compare_egv_in_range(t_egv, m_egv)
+    else:  # must be ios or failure
+        print('Must be iOS device ')
+        if t_egv == m_egv:
+            print('Pass: match egv for G7')
+            return True
+        else:
+            return compare_egv_in_range(t_egv, m_egv)
+
+
+res = compare_egv(192, 192)
