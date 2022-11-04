@@ -177,12 +177,6 @@ class AppiumIOS:
         f_name = '{}_{}_{}.png'.format(name, self.device_id, time.strftime("%Y%m%d-%H%M%S"))
         self.driver.get_screenshot_as_file(f_name)
 
-    def g7_login_later(self):
-        try:
-            self.driver.find_element_by_id('com.dexcom.g7:id/id_login_later_button').click()
-        except Exception as e:
-            print('Login screen failed ' + str(e))
-
     def g7_re_login(self, user_nm, pass_wd):
         try:
             self.driver.find_element_by_id('com.dexcom.g7:id/id_login_now_button').click()
@@ -201,10 +195,10 @@ class AppiumIOS:
         except Exception as e:
             print('Login failed ' + str(e))
 
-    def d1_login(self, user_nm, pass_wd):
+    def d1_g7_login(self, user_nm, pass_wd):
         try:
-            # self.driver.find_element_by_ios_predicate('value == "Username/E-mail address" AND type == "XCUIElementTypeTextField"').send_keys(user_nm)
-            # sleep(2)
+            self.driver.find_element_by_ios_predicate('value == "Username/E-mail address" AND type == "XCUIElementTypeTextField"').send_keys(user_nm)
+            sleep(2)
             # self.driver.find_element_by_ios_predicate('label == "Done"').click()
             # self.driver.find_element_by_ios_predicate('label == "Next"').click()
             # self.driver.find_element_by_id('value == "Password"').send_keys(pass_wd)
@@ -213,16 +207,7 @@ class AppiumIOS:
             # self.driver.find_element_by_ios_predicate('label == "Login"').click()
             # self.driver.find_element_by_ios_class_chain('**/XCUIElementTypeWebView[`name == "id_legal_webview"`]/XCUIElementTypeWebView/XCUIElementTypeWebView/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[2]/XCUIElementTypeOther').click()
             # self.driver.find_element_by_ios_class_chain('**/XCUIElementTypeWebView[`name == "id_legal_webview"`]/XCUIElementTypeWebView/XCUIElementTypeWebView/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther[3]/XCUIElementTypeOther').click()
-            self.driver.find_element_by_ios_predicate('label == "Submit"').click()
-            # username.click()
-            # username.send_keys(user_nm)
-            # # self.driver.keyevent(61)
-            # passwd = self.driver.find_element_by_xpath("//android.widget.EditText[@resource-id='password']")
-            # passwd.send_keys(pass_wd)
-            # self.driver.keyevent(66)
-            # sleep(60)
-            # self.driver.find_element_by_xpath("(//android.widget.CheckBox)[1]").click()
-            # self.driver.find_element_by_xpath("(//android.widget.CheckBox)[2]").click()
+            # self.driver.find_element_by_ios_predicate('label == "Submit"').click()
         except Exception as e:
             print('Login failed ' + str(e))
 
@@ -253,12 +238,12 @@ class AppiumIOS:
         """
         lost_help = lost_title = None
         try:
-            lost_help = self.driver.find_elements_by_ios_predicate('id_glucose_state_card_help_button')
+            lost_help = self.driver.find_element_by_ios_predicate('id_glucose_state_card_help_button')
         except NoSuchElementException as e:
             print('Get lost_help button failed ' + str(e))
 
         try:
-            lost_title = self.driver.find_elements_by_ios_predicate('id_glucose_state_card_title_label')
+            lost_title = self.driver.find_element_by_ios_predicate('id_glucose_state_card_title_label')
         except NoSuchElementException as e:
             print('Get lost_title  failed ' + str(e))
 
@@ -277,12 +262,14 @@ class AppiumIOS:
         """
         lost_ok = lost_title = None
         try:
-            lost_ok = self.driver.find_elements_by_ios_predicate('id_alert_acknowledge_button')
+            lost_ok = self.driver.find_element_by_ios_predicate('id_alert_acknowledge_button')
         except NoSuchElementException as e:
             print('Get lost_ok button failed ' + str(e))
 
         if lost_ok is not None:
             return True
+        else:
+            return False
 
     def appium_touch_move_up(self):
         self._y_scroll(self.scroll_y_top, self.scroll_y_bottom)

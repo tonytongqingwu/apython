@@ -10,10 +10,15 @@ print(appium_d.driver.capabilities['deviceName'])
 print('battery')
 print(appium_d.get_battery_level())
 
-appium_d.run_app(G1_APP)
+# appium_d.run_app(G1_APP)
 egv = appium_d.get_egv()
 print(egv)
 print(type(egv))
+
+if appium_d.g7_verify_signal_loss_alert():
+    print('alert')
+else:
+    print('no alert')
 
 # appium_d.d1_login('allanprodvnvbell@gmail.com', 'Dexcom123')
 # appium_d.g7_click_ok_alert_ack()
