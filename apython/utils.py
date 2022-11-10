@@ -242,7 +242,7 @@ def get_transmitter_info():
     address = ''
     prod_type = 'G7'
     r_code, s_out, s_err = run_command('docker logs jarvis_local --since=6m')
-    r_code2, s_out2, s_err2 = run_command('docker logs jarvis_server --since=6m')
+    r_code2, s_out2, s_err2 = run_command('tail -100  {}/jarvis/localLogFile.txt'.format(os.getenv('HOME')))
 
     if r_code == 0 or r_code2 == 0:
         if r_code != 0:
