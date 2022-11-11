@@ -21,8 +21,19 @@ print(appium_d.get_battery_level())
 #     print('no alert')
 #
 # appium_d.d1_g7_login('tst1.andr.us@gmail.com', 'Test1ng2022')
-user_nm = 'gleon.vnv+004@gmail.com'
+# US ios account, VnV debug build from Suresh Pentela
+# user_nm = 'gleon.vnv+004@gmail.com'
+# pass_wd = 'Dexcom123'
+#
+# # UK account with mmol unit, Vnv debug build from Poonam Hegde
+# user_nm = 'dexcomvnv+914uk@gmail.com'
+# pass_wd = 'Dexcom123'
+
+# TestFlight (not working with DrStrange), firebase account, created
+user_nm = 'tvnv809@gmail.com'
 pass_wd = 'Dexcom123'
+
+# firebase account for email: Dexcom776@gmail.com/Firebase619!
 
 try:
     # appium_d.driver.find_element_by_ios_predicate(
