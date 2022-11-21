@@ -5,7 +5,7 @@ from datetime import datetime
 from apython.utils import get_wip_id, create_log_path, remove_appium
 from apython.apps.app import *
 from apython.grpc.gclient import GrpcClient
-from apython.utils import get_transmitter_info, log_info, record_apps, logcat, compare_egv
+from apython.utils import get_transmitter_info, log_info, record_apps, logcat, compare_egv, send_test_report
 
 
 if __name__ == '__main__':
@@ -33,6 +33,8 @@ if __name__ == '__main__':
     model = app_d.get_model()
     log_path = create_log_path(model, id_adb)
     print('log path {}'.format(log_path))
+
+    send_test_report('android', model, G7_APP, '1.4')
 
     app_log = log_path + '/apps.log'
     info = log_path + '/info.log'

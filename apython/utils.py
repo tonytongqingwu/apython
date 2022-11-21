@@ -4,7 +4,6 @@ import re
 import time
 from testrail_common import TestRailApi
 from time import sleep
-from apython.apps.app import D1_APP, G7_APP
 
 
 def record_top(file_name, value):
@@ -363,6 +362,10 @@ def compare_egv(t_egv, m_egv):
         print('Fail: mobile app has no EGV !!!')
         return False
 
+    if t_egv == 0:
+        print('Fail: found no EGV from DrStrange !!!')
+        return False
+
     if isinstance(m_egv, str):
         print('Must be android device ')
         if str(t_egv) == m_egv:
@@ -371,7 +374,6 @@ def compare_egv(t_egv, m_egv):
         else:
             return compare_egv_in_range(t_egv, m_egv)
     else:  # must be ios or failure
-        print('Must be iOS device ')
         if t_egv == m_egv:
             print('Pass: match egv for G7')
             return True
@@ -379,18 +381,20 @@ def compare_egv(t_egv, m_egv):
             return compare_egv_in_range(t_egv, m_egv)
 
 
-def send_test_report(platform, model, app, run_name, description):
+def send_test_report(platform, model, app, run_name):
+    run_name = f'{platform}-{model}-{app} Stress Test {run_name}'
+    description = run_name
     if platform == 'ios':
-        if app == D1_APP:
+        if app == 'D1G':
             case_id = 671850
-        elif app == G7_APP:
+        elif app == 'G7':
             case_id = 671384
         else:
             print('Unknown app, no report will be created !!!')
     elif platform == 'android':
-        if app == D1_APP:
+        if app == 'D1G':
             case_id = 671531
-        elif app == G7_APP:
+        elif app == 'G7':
             case_id = 233067
         else:
             print('Unknown app, no report will be created !!!')

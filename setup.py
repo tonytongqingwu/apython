@@ -12,12 +12,8 @@ setup(
     install_requires=['uiautomator',
                       'Appium-Python-Client==1.1.0',
                       'word2number',
-                      'grpc-requests',
-                      'testrail_common'
+                      'grpc-requests'
                       ],
-    dependency_links=[
-        'git+ssh://git@github.com/dexcom-inc/VnV-Common-TestRail.git'
-    ],
     classifiers=[
         'Development Status :: 1 - Testing',
         'Intended Audience :: Development/VnV',

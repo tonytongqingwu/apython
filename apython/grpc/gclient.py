@@ -21,13 +21,14 @@ class GrpcClient:
         self.egv_request['transmitterId'] = transmitter_id
 
     def get_egv(self):
+        egv = 0
         result = self.client.request("G7TransmitterSimulatorService", "GetG7CommunicatedEGV", self.egv_request)
         print(type(result))
         egvs = result['communicatedEGV']
         # last_3_egv = egvs[-3:]
         # print(last_3_egv)
-        last_egv = egvs[-1]
-        return last_egv['egv']
+        egv = last_egv = egvs[-1]['egv']
+        return egv
 
     def save_state(self, state_string):
         """
