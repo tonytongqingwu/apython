@@ -45,7 +45,7 @@ if __name__ == '__main__':
     start_time = None
     pause_count = 0
 
-    APPS = list(map(lambda x: x.replace(G7_APP, G1_APP), APPS))
+    APPS = list(map(lambda x: x.replace(G7_APP, D1_APP), APPS))
     print(APPS)
     while True:
         app_d.run_app(MUSIC)  # always run music
@@ -64,8 +64,8 @@ if __name__ == '__main__':
         app_d.run_app(MUSIC)  # always run music
         record_apps(app_log, MUSIC)
 
-        app_d.run_app(G1_APP)
-        record_apps(app_log, G1_APP)
+        app_d.run_app(D1_APP)
+        record_apps(app_log, D1_APP)
 
         now = datetime.now()
         if 0 < now.hour < 24:  # We can always make alert not sound by settings, so run 24 hours now.

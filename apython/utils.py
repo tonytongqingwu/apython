@@ -2,8 +2,9 @@ import os
 import subprocess
 import re
 import time
-import json
+from testrail_common import TestRailApi
 from time import sleep
+from apython.apps.app import D1_APP, G7_APP
 
 
 def record_top(file_name, value):
@@ -378,4 +379,41 @@ def compare_egv(t_egv, m_egv):
             return compare_egv_in_range(t_egv, m_egv)
 
 
-res = compare_egv(192, 192)
+def send_test_report(platform, model, app, run_name, description):
+    if platform == 'ios':
+        if app == D1_APP:
+            case_id = 671850
+        elif app == G7_APP:
+            case_id = 671384
+        else:
+            print('Unknown app, no report will be created !!!')
+    elif platform == 'android':
+        if app == D1_APP:
+            case_id = 671531
+        elif app == G7_APP:
+            case_id = 233067
+        else:
+            print('Unknown app, no report will be created !!!')
+    else:
+        print('Invalid platform, no report')
+
+    testrail = TestRailApi('https://dexcom.testrail.io/', 'projectid', 'suite')
+    act_runs = testrail.testrail_get_active_run()
+    case = testrail.testrail_get_case(case_id)
+    testrail.testrail_create_run_from_case_list(run_name, description, [case])
+    act_runs_new = testrail.testrail_get_active_run()
+    new_run = [run for run in act_runs_new if run not in act_runs]
+
+    results = [{
+        "case_id": case_id,
+        "status_id": 5,
+        "comment": "Result comments"
+    },
+    ]
+
+    testrail.testrail_add_bulk_results(int(new_run[0]['id']), results)
+
+
+
+
+
