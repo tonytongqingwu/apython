@@ -4,7 +4,7 @@ from time import sleep
 from apython.utils import get_iphone_id, create_log_path
 from apython.iosappium import *
 from apython.grpc.gclient import GrpcClient
-from apython.utils import get_transmitter_info, log_info, record_apps, logcat, compare_egv
+from apython.utils import get_transmitter_info, log_info, record_apps, logcat, compare_egv, send_test_report
 from datetime import datetime
 
 
@@ -19,6 +19,8 @@ if __name__ == '__main__':
     model = app_d.get_model()
     log_path = create_log_path(model, ios_id)
     print('log path {}'.format(log_path))
+
+    send_test_report('ios', model, G7_APP, '1.4')
 
     app_log = log_path + '/apps.log'
     info = log_path + '/info.log'
