@@ -42,6 +42,20 @@ Home folder has a new folder like this - /module/adb_serial_num/timestamp
 ## If you have issue of installation, or running message like:
 `ModuleNotFoundError: No module named ‘google.protobuf’`
 
+Try these:
+```
+pip3 install protobuf
+```
+or
+```
+sudo pip3 install protobuf
+```
+or 
+```
+python3 -m pip install protobuf
+```
+
+
 Follow steps to fix:
 1. install python 3.10.8 https://www.python.org/downloads/release/python-3108/   
 2. Go to new script folder
