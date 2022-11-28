@@ -4,8 +4,9 @@ from time import sleep
 from datetime import datetime
 from apython.utils import get_wip_id, create_log_path, remove_appium
 from apython.apps.app import *
-from apython.grpc.d1pake import D1Pake
-from apython.utils import get_transmitter_info_d1_pake, log_info, record_apps, logcat, get_id, compare_egv
+# from apython.grpc.d1pake import D1Pake
+# from apython.utils import get_transmitter_info_d1_pake, log_info, record_apps, logcat, get_id, compare_egv
+from apython.utils import record_apps,  get_id
 
 
 if __name__ == '__main__':
@@ -38,8 +39,8 @@ if __name__ == '__main__':
     app_log = log_path + '/apps.log'
     info = log_path + '/info.log'
 
-    prod_type, address, transmitter_id = get_transmitter_info_d1_pake()
-    g = D1Pake(address, transmitter_id)
+    # prod_type, address, transmitter_id = get_transmitter_info_d1_pake()
+    # g = D1Pake(address, transmitter_id)
     pause_time = None
     start_time = None
     pause_count = 0
