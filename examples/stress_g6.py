@@ -45,7 +45,7 @@ if __name__ == '__main__':
     start_time = None
     pause_count = 0
 
-    APPS.remove()
+    APPS.remove(G7_APP)
     print(APPS)
     while True:
         app_d.run_app(MUSIC)  # always run music
