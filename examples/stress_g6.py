@@ -6,7 +6,7 @@ from apython.utils import get_wip_id, create_log_path, remove_appium
 from apython.apps.app import *
 # from apython.grpc.d1pake import D1Pake
 # from apython.utils import get_transmitter_info_d1_pake, log_info, record_apps, logcat, get_id, compare_egv
-from apython.utils import record_apps,  get_id
+from apython.utils import record_apps,  get_id, logcat, log_info
 
 
 if __name__ == '__main__':
@@ -45,7 +45,8 @@ if __name__ == '__main__':
     start_time = None
     pause_count = 0
 
-    APPS.remove(G7_APP)
+    # APPS.remove(G7_APP)
+    APPS = list(map(lambda x: x.replace(G7_APP, G6_APP), APPS))
     print(APPS)
     while True:
         app_d.run_app(MUSIC)  # always run music
@@ -64,10 +65,10 @@ if __name__ == '__main__':
         app_d.run_app(MUSIC)  # always run music
         record_apps(app_log, MUSIC)
 
-        # app_d.run_app(G1_APP)
-        # record_apps(app_log, G1_APP)
-        #
-        # now = datetime.now()
+        app_d.run_app(G6_APP)
+        record_apps(app_log, G6_APP)
+
+        now = datetime.now()
         # if 0 < now.hour < 24:  # We can always make alert not sound by settings, so run 24 hours now.
         #     if pause_time is None:
         #         if start_time is None or (start_time is not None and (now - start_time).total_seconds() > 1800):
@@ -90,9 +91,9 @@ if __name__ == '__main__':
         # else:
         #     print('Sleep time, make sure uncheck automatic mode on DrStrange.')
         #
-        # msg = '{} Check G1'.format(datetime.now())
-        # log_info(info, msg)
-        # logcat(log_path, id_adb)
+        msg = '{} Check G1'.format(datetime.now())
+        log_info(info, msg)
+        logcat(log_path, id_adb)
         # if app_d.g7_verify_signal_loss_alert(app=G1_NAME):
         #     print("\033[91mSignal lost alert !!!\033[0m")
         #     msg = '{} Signal lost alert'.format(datetime.now())

@@ -16,6 +16,7 @@ MUSIC = 'Music'
 SETTINGS = 'Settings'
 MEMORY = 'Memory'
 G1_APP = 'G1'
+G6_APP = 'G6'
 
 APPS = [CAMERA, MAP, CHROME, G7_APP, MEMORY, SETTINGS, MUSIC]
 
@@ -33,6 +34,8 @@ class AppiumApps(AppiumDevice):
             G7.launch_g7(self)
         elif app == G1_APP:
             G1.launch_g1(self)
+        elif app == G6_APP:
+            G1.launch_g6(self)
         elif app == CAMERA:
             Camera.take_pictures(self)
         elif app == CHROME:
