@@ -9,13 +9,13 @@ class Map(AppiumDevice):
 
     def navigate(self):
         print('Run Google Map')
-        self.driver.start_activity('com.google.android.apps.maps', 'com.google.android.maps.MapsActivity')
-        sleep(4)
         try:
-            # Click on 1st tab
-            print("Click on First Tab")
-            # self.driver.find_element_by_xpath("//android.widget.Button[@index='0']").click()
-            # sleep(2)
+            if 'P042192' in self.driver.capabilities['deviceModel']:
+                self.driver.start_activity('com.google.android.apps.mapslite',
+                                           'com.google.maps.lite.twa.MapsLiteTwaLauncherActivity')
+            else:
+                self.driver.start_activity('com.google.android.apps.maps', 'com.google.android.maps.MapsActivity')
+            sleep(4)
             print("Navigating Up and Down")
             self.appium_touch_move_up()
             self.appium_touch_move_up()

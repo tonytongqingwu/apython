@@ -19,4 +19,5 @@ if __name__ == '__main__':
         exit(1)
 
     app_d = AppiumApps(id_adb)
-    app_d.run_app(G6_APP)
+    app_d.driver.start_activity('com.google.android.apps.mapslite', 'com.google.maps.lite.twa.MapsLiteTwaLauncherActivity')
+
