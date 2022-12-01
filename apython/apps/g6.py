@@ -13,7 +13,7 @@ class G6(AppiumDevice):
         print("-------------------------------------")
         try:
             self.home()
-            self.driver.activate_app('com.dexcom.g6.base.mmol')
+            self.driver.activate_app('com.dexcom.g6')
             sleep(8)
         except Exception as e:
             print(str(e))
