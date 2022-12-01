@@ -11,7 +11,7 @@ class Map(AppiumDevice):
     def navigate(self):
         print('Run Google Map')
         try:
-            if 'P042192' in self.driver.capabilities['deviceModel']:
+            if 'T55' in self.driver.capabilities['deviceModel']:
                 run_command('adb -s {} shell monkey -p com.google.android.apps.mapslite -c android.intent.category.LAUNCHER 1'.format(self.adb_id))
             else:
                 self.driver.start_activity('com.google.android.apps.maps', 'com.google.android.maps.MapsActivity')
