@@ -47,7 +47,7 @@ if __name__ == '__main__':
 
     # APPS.remove(G7_APP)
     APPS = list(map(lambda x: x.replace(G7_APP, G6_APP), APPS))
-    APPS = APPS.remove(CAMERA)
+    APPS.remove(CAMERA)
     print(APPS)
     while True:
         app_d.run_app(MUSIC)  # always run music
