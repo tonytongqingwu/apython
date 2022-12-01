@@ -16,8 +16,7 @@ class Camera(AppiumDevice):
             if 'Pixel' in self.driver.capabilities['deviceModel']:
                 self.driver.start_activity('com.google.android.GoogleCamera', 'com.android.camera.CameraLauncher')
             elif 'P042192' in self.driver.capabilities['deviceModel']:
-                self.driver.start_activity('com.mediatek.camera/com.mediatek.camera.CameraLauncher',
-                                           'com.mediatek.camera.CameraLauncher')
+                self.driver.start_activity('com.mediatek.camera', 'com.mediatek.camera.CameraLauncher')
             else:
                 self.driver.keyevent(27)
             sleep(4)
