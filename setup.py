@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='apython',
-    version='1.1.5',
+    version='1.1.6',
     description='An Android Python package',
     url='https://github.com/tonytongqingwu/apython.git',
     author='tonytongqingwu',
