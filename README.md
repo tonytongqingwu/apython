@@ -42,6 +42,12 @@ Home folder has a new folder like this - /module/adb_serial_num/timestamp
 ## If you have issue of installation, or running message like:
 `ModuleNotFoundError: No module named ‘google.protobuf’`
 
+Check `which python3`, `which python3.10`, `which pip3`, make sure brew installed python3.10.  EX.
+`/opt/homebrew/bin/python3.10` and `/opt/homebrew/bin/pip3`.  
+
+If python3 is not brew installed, run all scripts use `python3.10`.  EX. `python3.10 stress.py`.
+`python3.10 setup.py install`
+
 Follow steps to fix:
 1. install python 3.10.8 https://www.python.org/downloads/release/python-3108/   
 2. Go to new script folder
@@ -53,6 +59,12 @@ to update the script - remove USB power support for now.
 `pip3 install grpc-requests ; pip3 install Appium-Python-Client==1.1.0`
 5. Now setup G7, pair with DrStange, and ready to run:
 `cd ~/Sandbox/apython/examples ; bash stress_check.sh`
+6. Try setup with python3.10, not python3
+`python3.10 setup.py install`
+7. If it still has issue, build docker image:
+`docker build -t quick-test .`
+8. This line will be in all stress_x.py for DrStrange control:
+`python3 examples/docker_strange.py PAUSE_ADVERTISING` and `python3 examples/docker_strange.py START_ADVERTISING`
 
 ## other examples
 There are other example for different apps, ask tony.wu@dexcom.com
