@@ -94,7 +94,7 @@ if __name__ == '__main__':
             if start_time is not None and (now - start_time).total_seconds() > 1900:
                 print('Fail: Signal is not recovered')
                 log_info(info, '{} Fail: Signal is not recovered on alert'.format(datetime.now()))
-            app_d.save_screen('{}/signal_loss_alert'.format(log_path))
+            # app_d.save_screen('{}/signal_loss_alert'.format(log_path))
             app_d.g7_click_ok_alert_ack()
         elif app_d.g7_verify_signal_loss_message():
             # over 16 minute
@@ -106,7 +106,7 @@ if __name__ == '__main__':
                 log_info(info, '{} Fail: Signal is not recovered'.format(datetime.now()))
             print("\033[91mSignal loss message !!!\033[0m")
             log_info(info, '{} Signal loss message'.format(datetime.now()))
-            app_d.save_screen('{}/signal_loss_message'.format(log_path))
+            # app_d.save_screen('{}/signal_loss_message'.format(log_path))
         else:
             egv = g.get_egv()
             print(egv)
@@ -119,7 +119,7 @@ if __name__ == '__main__':
                 print('Fail: EGV not match: transmitter>{}, {}<mobile'.format(egv, m_egv))
                 msg = '{} Fail: EGV not match: transmitter>{}, {}<mobile'.format(egv, m_egv, datetime.now())
                 log_info(info, msg)
-                app_d.save_screen('{}/no_egv'.format(log_path))
+                # app_d.save_screen('{}/no_egv'.format(log_path))
 
             print('Click ack OK button if any other alert')
             app_d.g7_click_ok_alert_ack()
