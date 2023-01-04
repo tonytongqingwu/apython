@@ -26,7 +26,7 @@ if __name__ == '__main__':
     remove_appium(id_adb)
 
     os.system('bash appium_start.sh')
-    sleep(20)
+    sleep(40)
 
     app_d = AppiumApps(id_adb)
 
