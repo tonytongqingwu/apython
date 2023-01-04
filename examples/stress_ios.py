@@ -12,6 +12,8 @@ if __name__ == '__main__':
     os.system('bash ./kill_ps.sh')
     ios_id = get_iphone_id()
     print(ios_id)
+    os.system('bash appium_start.sh')
+    sleep(20)
     app_d = AppiumIOS(ios_id)
     print(app_d.driver.capabilities['deviceName'])
     print('battery')
@@ -29,9 +31,6 @@ if __name__ == '__main__':
         print('Got no drStrange information ... exit ')
         exit(1)
     g = GrpcClient(address, pair_code, transmitter_id)
-
-    os.system('bash appium_start.sh')
-    sleep(20)
 
     pause_time = None
     start_time = None
