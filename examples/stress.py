@@ -25,9 +25,6 @@ if __name__ == '__main__':
 
     remove_appium(id_adb)
 
-    os.system('bash appium_start.sh')
-    sleep(20)
-
     app_d = AppiumApps(id_adb)
 
     model = app_d.get_model()
@@ -38,7 +35,14 @@ if __name__ == '__main__':
     info = log_path + '/info.log'
 
     prod_type, address, transmitter_id, pair_code = get_transmitter_info()
+    if address == '':
+        print('Got no drStrange information ... exit ')
+        exit(1)
     g = GrpcClient(address, pair_code, transmitter_id)
+
+    os.system('bash appium_start.sh')
+    sleep(20)
+
     pause_time = None
     start_time = None
     pause_count = 0

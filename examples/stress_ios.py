@@ -9,6 +9,7 @@ from datetime import datetime
 
 
 if __name__ == '__main__':
+    os.system('bash ./kill_ps.sh')
     ios_id = get_iphone_id()
     print(ios_id)
     app_d = AppiumIOS(ios_id)
@@ -24,7 +25,14 @@ if __name__ == '__main__':
     info = log_path + '/info.log'
 
     prod_type, address, transmitter_id, pair_code = get_transmitter_info()
+    if address == '':
+        print('Got no drStrange information ... exit ')
+        exit(1)
     g = GrpcClient(address, pair_code, transmitter_id)
+
+    os.system('bash appium_start.sh')
+    sleep(20)
+
     pause_time = None
     start_time = None
     pause_count = 0
