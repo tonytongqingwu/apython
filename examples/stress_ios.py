@@ -81,7 +81,6 @@ if __name__ == '__main__':
 
         msg = '{} Check G7'.format(datetime.now())
         log_info(info, msg)
-        logcat(log_path, ios_id)
         if app_d.g7_verify_signal_loss_alert():
             print("\033[91mSignal lost alert !!!\033[0m")
             msg = '{} Signal lost alert'.format(datetime.now())
