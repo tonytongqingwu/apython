@@ -112,6 +112,8 @@ class AppiumDevice:
     def get_model(self):
         m = self.driver.capabilities['deviceModel']
         m = m.replace(' ', '')
+        m = m.replace('(', '')
+        m = m.replace(')', '')
         return m
 
     def save_screen(self, name):
